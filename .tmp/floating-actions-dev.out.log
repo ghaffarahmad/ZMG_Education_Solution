@@ -1,0 +1,39 @@
+
+> zmg-education-portal@0.1.0 dev
+> next dev --port 3000
+
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.152:3000
+- Environments: .env
+✓ Ready in 2.5s
+Creating turbopack project {
+  dir: 'C:\\Users\\Sami\\Desktop\\important\\zmg-education-portal',
+  testMode: true
+}
+
+○ Compiling / ...
+ GET / 200 in 16.5s (next.js: 12.2s, application-code: 4.2s)
+ GET / 200 in 1303ms (next.js: 44ms, application-code: 1259ms)
+ GET / 200 in 3.6s (next.js: 18ms, application-code: 3.6s)
+ GET / 200 in 24.1s (next.js: 14.2s, application-code: 10.0s)
+ GET /api/notices/public?ticker=true 200 in 1017ms (next.js: 537ms, application-code: 480ms)
+ GET /api/auth/check 200 in 1319ms (next.js: 745ms, application-code: 574ms)
+ GET /api/settings/public 200 in 1953ms (next.js: 916ms, application-code: 1038ms)
+ GET /api/settings/public 200 in 133ms (next.js: 7ms, application-code: 126ms)
+ GET / 200 in 1591ms (next.js: 167ms, application-code: 1424ms)
+ GET / 200 in 1447ms (next.js: 9ms, application-code: 1438ms)
+ GET /api/auth/check 200 in 61ms (next.js: 32ms, application-code: 28ms)
+ GET /api/settings/public 200 in 134ms (next.js: 9ms, application-code: 125ms)
+ GET /api/notices/public?ticker=true 200 in 145ms (next.js: 22ms, application-code: 123ms)
+ GET /api/settings/public 200 in 126ms (next.js: 7ms, application-code: 118ms)
+ GET /api/public/student-name-preview 200 in 455ms (next.js: 323ms, application-code: 132ms)
+ GET / 200 in 1140ms (next.js: 11ms, application-code: 1129ms)
+ GET /api/auth/check 200 in 33ms (next.js: 21ms, application-code: 12ms)
+ GET /api/settings/public 200 in 125ms (next.js: 9ms, application-code: 117ms)
+ GET /api/notices/public?ticker=true 200 in 120ms (next.js: 9ms, application-code: 111ms)
+ GET /api/settings/public 200 in 116ms (next.js: 6ms, application-code: 110ms)
+ GET /api/public/student-name-preview 200 in 118ms (next.js: 6ms, application-code: 111ms)
+ GET / 200 in 896ms (next.js: 13ms, application-code: 883ms)
+ GET /api/public/student-name-preview 200 in 3.6s (next.js: 230ms, application-code: 3.4s)
+[?25h

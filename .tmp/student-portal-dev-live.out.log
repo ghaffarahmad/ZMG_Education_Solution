@@ -1,0 +1,40 @@
+
+> zmg-education-portal@0.1.0 dev
+> next dev --port 3000
+
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.152:3000
+- Environments: .env
+✓ Ready in 1784ms
+Creating turbopack project {
+  dir: 'C:\\Users\\Sami\\Desktop\\important\\zmg-education-portal',
+  testMode: true
+}
+
+○ Compiling /student-portal ...
+ GET /about 200 in 1766ms (next.js: 248ms, application-code: 1518ms)
+ GET /student-portal 200 in 633ms (next.js: 16ms, application-code: 618ms)
+ GET /api/auth/check 200 in 614ms (next.js: 404ms, application-code: 210ms)
+ GET /api/settings/public 200 in 1119ms (next.js: 885ms, application-code: 234ms)
+ GET /api/settings/public 200 in 141ms (next.js: 23ms, application-code: 118ms)
+ GET /api/notices/public?ticker=true 200 in 1855ms (next.js: 1056ms, application-code: 798ms)
+ GET /student-portal 200 in 559ms (next.js: 8ms, application-code: 552ms)
+ POST /api/student/search 404 in 428ms (next.js: 294ms, application-code: 135ms)
+ GET /about 200 in 647ms (next.js: 15ms, application-code: 633ms)
+ GET /api/auth/check 200 in 117ms (next.js: 46ms, application-code: 71ms)
+ GET /api/settings/public 200 in 178ms (next.js: 18ms, application-code: 160ms)
+ GET /api/notices/public?ticker=true 200 in 945ms (next.js: 68ms, application-code: 877ms)
+ GET /api/settings/public 200 in 148ms (next.js: 13ms, application-code: 136ms)
+ GET / 200 in 978ms (next.js: 232ms, application-code: 746ms)
+ GET /api/auth/check 200 in 1838ms (next.js: 1816ms, application-code: 22ms)
+ GET /api/public/student-name-preview 200 in 2.0s (next.js: 1501ms, application-code: 528ms)
+ GET /admission-support 200 in 554ms (next.js: 189ms, application-code: 365ms)
+ GET /services 200 in 1316ms (next.js: 244ms, application-code: 1072ms)
+ GET /api/public/student-name-preview 200 in 4.8s (next.js: 1703ms, application-code: 3.1s)
+ GET /contact 200 in 966ms (next.js: 359ms, application-code: 607ms)
+ GET /notices 200 in 2.4s (next.js: 416ms, application-code: 1938ms)
+ GET /api/auth/check 200 in 48ms (next.js: 17ms, application-code: 31ms)
+ GET /api/settings/public 200 in 181ms (next.js: 32ms, application-code: 149ms)
+ GET /api/settings/public 200 in 233ms (next.js: 47ms, application-code: 186ms)
+[?25h
