@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     
     const parseResult = optionSchema.safeParse(body);
     if (!parseResult.success) {
-      return NextResponse.json({ success: false, message: "Validation error", errors: parseResult.error.errors }, { status: 400 });
+      return NextResponse.json({ success: false, message: "Validation error", errors: parseResult.error.flatten().fieldErrors }, { status: 400 });
     }
 
     const data = parseResult.data;
