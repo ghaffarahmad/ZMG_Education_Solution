@@ -119,7 +119,7 @@ export default async function StudentPortalDashboardPage() {
 
   const { default: StudentEnrollment } = await import("@/models/StudentEnrollment");
   const activeEnrollment = await StudentEnrollment.findOne({
-    studentId: student._id,
+    studentId: student._id.toString(),
     academicStatus: "active"
   }).lean<any>();
 
@@ -132,7 +132,7 @@ export default async function StudentPortalDashboardPage() {
 
   const [documents, settings] = await Promise.all([
     Document.find({
-      studentId: student._id,
+      studentId: student._id.toString(),
       isPublished: true,
     })
       .select("title type createdAt downloadAllowed requiresFeeClearance isPublished fileSize mimeType")
