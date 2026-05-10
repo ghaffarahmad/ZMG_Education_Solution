@@ -20,14 +20,6 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   creator: SITE_NAME,
   publisher: SITE_NAME,
-  icons: {
-    icon: [
-      { url: "/favicon.ico?v=2", sizes: "any" },
-      { url: "/favicon.png?v=2", type: "image/png", sizes: "500x500" }
-    ],
-    shortcut: ["/favicon.png?v=2"],
-    apple: [{ url: "/favicon.png?v=2", type: "image/png", sizes: "500x500" }],
-  },
   verification: {
     google: "4-XCsUuYDKGiUs32T-pvjgzRXVSvsQP4wF0aHh_CuKU",
   },
