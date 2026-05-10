@@ -16,9 +16,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-dvh overflow-x-hidden bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen overflow-x-hidden bg-gray-50 dark:bg-gray-900">
       <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} isDesktopCollapsed={isDesktopCollapsed} restoreFocusRef={menuButtonRef} />
-      <div className="flex h-dvh min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <AdminHeader
           isSidebarOpen={isSidebarOpen}
           isDesktopCollapsed={isDesktopCollapsed}
@@ -26,7 +26,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           toggleMobileSidebar={() => setIsSidebarOpen((current) => !current)}
           toggleDesktopSidebar={() => setIsDesktopCollapsed((current) => !current)}
         />
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 pb-[calc(env(safe-area-inset-bottom)+1rem)] sm:p-4 md:p-6">{children}</main>
+        <main id="admin-main-scroll" className="flex-1 overflow-y-auto overflow-x-hidden p-3 pb-[calc(env(safe-area-inset-bottom)+1rem)] sm:p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

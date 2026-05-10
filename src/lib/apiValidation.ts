@@ -40,7 +40,7 @@ export const inquirySchema = z.object({
   name: z.string().trim().min(2, "Name is required"),
   phone: z.string().trim().regex(/^[0-9+\-\s()]{7,20}$/, "Phone format is invalid"),
   programInterest: z.string().trim().optional().or(z.literal("")),
-  board: z.enum(BOARD_OPTIONS).optional().or(z.literal("")),
+  board: z.string().trim().optional().or(z.literal("")),
   message: z.string().trim().min(10, "Message must be at least 10 characters"),
 });
 

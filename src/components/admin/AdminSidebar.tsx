@@ -108,7 +108,7 @@ export function AdminSidebar({ isOpen, setIsOpen, isDesktopCollapsed = false, re
 
   return (
     <>
-      <aside className={`hidden h-dvh shrink-0 flex-col border-r border-slate-200 bg-white dark:border-white/10 dark:bg-[#092128] transition-[width] duration-300 md:flex ${isDesktopCollapsed ? 'w-[72px]' : 'w-64'}`}>
+      <aside className={`hidden h-dvh sticky top-0 shrink-0 flex-col border-r border-slate-200 bg-white dark:border-white/10 dark:bg-[#092128] transition-[width] duration-300 md:flex ${isDesktopCollapsed ? 'w-[72px]' : 'w-64'}`}>
         {sidebarContent(false)}
       </aside>
       <MobileDrawer

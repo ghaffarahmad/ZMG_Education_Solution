@@ -81,6 +81,18 @@ export default function ContactPage() {
     fetchSettings();
   }, []);
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSuccess) {
+      timer = setTimeout(() => {
+        setIsSuccess(false);
+      }, 5000);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isSuccess]);
+
   const onSubmit = async (data: InquiryFormValues) => {
     setIsSubmitting(true);
     try {
