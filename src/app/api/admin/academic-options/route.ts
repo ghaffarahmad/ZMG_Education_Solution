@@ -69,10 +69,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "An option with this name already exists in this context." }, { status: 400 });
     }
 
-    const newOption = await AcademicOption.create({
+    const payload = {
       ...data,
       slug,
-    });
+      boardId: data.boardId || undefined,
+      programId: data.programId || undefined,
+      level: data.level || undefined,
+      year: data.year || undefined,
+      notes: data.notes || undefined,
+    };
+
+    const newOption = await AcademicOption.create(payload);
 
     return NextResponse.json({ success: true, data: newOption }, { status: 201 });
   } catch (error) {

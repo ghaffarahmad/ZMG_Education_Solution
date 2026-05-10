@@ -16,7 +16,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     }
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
     if (body.sortOrder !== undefined) updateData.sortOrder = body.sortOrder;
-    if (body.notes !== undefined) updateData.notes = body.notes;
+    if (body.notes !== undefined) updateData.notes = body.notes || undefined;
 
     const { id } = await context.params;
     const updatedOption = await AcademicOption.findByIdAndUpdate(id, updateData, { new: true });
