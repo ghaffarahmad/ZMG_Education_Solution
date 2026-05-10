@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { StudentPortalDashboard, type PortalResult, type PublicSettings } from "@/components/student-portal/StudentPortalDashboard";
 import { Container } from "@/components/ui/Container";
 import { verifyToken } from "@/lib/auth";
+import { backfillStudentDocumentsToDocuments } from "@/lib/documentBackfill";
 import { getSafeRemainingBalance } from "@/lib/feeMath";
 import connectToDatabase from "@/lib/mongodb";
 import type { PortalDocument, PortalStudent } from "@/lib/studentPortalDisplay";
@@ -129,6 +130,8 @@ export default async function StudentPortalDashboardPage() {
     student.session = activeEnrollment.session;
     student.group = activeEnrollment.group;
   }
+
+  await backfillStudentDocumentsToDocuments({ studentId: student._id });
 
   const [documents, settings] = await Promise.all([
     Document.find({

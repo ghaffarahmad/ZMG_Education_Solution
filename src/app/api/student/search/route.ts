@@ -4,6 +4,7 @@ import { SignJWT } from "jose";
 import connectToDatabase from "@/lib/mongodb";
 import Student from "@/models/Student";
 import Document from "@/models/Document";
+import { backfillStudentDocumentsToDocuments } from "@/lib/documentBackfill";
 import { getSafeRemainingBalance } from "@/lib/feeMath";
 
 export async function POST(request: Request) {
@@ -34,6 +35,8 @@ export async function POST(request: Request) {
     if (student.status !== "active") {
       return NextResponse.json({ success: false, message: "Your account is currently inactive. Please contact administration." }, { status: 403 });
     }
+
+    await backfillStudentDocumentsToDocuments({ studentId: student._id });
 
     // Fetch ONLY published documents for this student
     const documents = await Document.find({
@@ -91,6 +94,7 @@ export async function POST(request: Request) {
     });
 
   } catch (error: any) {
+    console.error("Student search error:", error);
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }

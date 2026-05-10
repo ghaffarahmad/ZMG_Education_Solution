@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
     if (!token) {
       if (isAdminApi) {
-        return NextResponse.json({ success: false, message: "Admin authentication required" }, { status: 401 });
+        return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
       }
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
     const payload = await verifyToken(token);
     if (!payload) {
       if (isAdminApi) {
-        return NextResponse.json({ success: false, message: "Invalid or expired admin session" }, { status: 401 });
+        return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
       }
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }

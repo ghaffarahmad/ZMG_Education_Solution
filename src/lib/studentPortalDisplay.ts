@@ -113,12 +113,12 @@ export function getDocumentAccessStatus(document: PortalDocument | undefined, st
   if (document.isPublished === false) return "not_published";
 
   const feePending = getRemainingBalance(student) > 0 || student.feeStatus !== "clear";
-  const lockedByFee = Boolean(document.requiresFeeClearance) && feePending;
-  const lockedByAdmin = Boolean(student.isManuallyBlocked);
-  const isLocked = (lockedByFee || lockedByAdmin) && !document.downloadAllowed;
+  const requiresFeeClearance = Boolean(document.requiresFeeClearance) || document.type === "admit_card";
+  const lockedByAdmin = Boolean(student.isManuallyBlocked) || student.feeStatus === "blocked";
 
-  if (lockedByFee && !document.downloadAllowed) return "fee_clearance_required";
-  if (isLocked) return "locked";
+  if (requiresFeeClearance && lockedByAdmin) return "locked";
+  if (requiresFeeClearance && feePending) return "fee_clearance_required";
+  if (document.downloadAllowed === false) return "locked";
   return "available";
 }
 

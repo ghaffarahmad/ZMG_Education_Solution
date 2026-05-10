@@ -854,13 +854,16 @@ export default function StudentDetailPage() {
                   </div>
                   <div className="space-y-2 pt-2 border-t border-slate-200">
                     <label className="flex items-center space-x-2 cursor-pointer">
+                      <input type="hidden" name="isPublished" value="false" />
                       <input type="checkbox" name="isPublished" value="true" defaultChecked className="rounded text-primary focus:ring-primary" />
                       <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Publish Immediately</span>
                     </label>
                     <label className="flex items-center space-x-2 cursor-pointer">
+                      <input type="hidden" name="requiresFeeClearance" value="false" />
                       <input type="checkbox" name="requiresFeeClearance" value="true" className="rounded text-primary focus:ring-primary" />
                       <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Requires Fee Clearance</span>
                     </label>
+                    <input type="hidden" name="downloadAllowed" value="true" />
                   </div>
                   <Button type="submit" className="w-full" disabled={saving}>
                     {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <UploadCloud className="w-4 h-4 mr-2" />}
@@ -877,7 +880,7 @@ export default function StudentDetailPage() {
                   </div>
                   <h4 className="text-lg font-bold text-slate-900 mb-2 dark:text-white">Secure Document Vault</h4>
                   <p className="text-slate-500 text-sm max-w-md mx-auto mb-6 dark:text-slate-300">
-                    Uploaded documents are securely stored in Oracle Object Storage. To view or manage uploaded documents, go to the centralized Document Center.
+                    Uploaded documents are securely stored in protected cloud storage. To view or manage uploaded documents, go to the centralized Document Center.
                   </p>
                   <Button asChild variant="outline" className="w-full sm:w-auto">
                     <Link href={`/admin/documents?search=${student.cnicOrBform}`}>

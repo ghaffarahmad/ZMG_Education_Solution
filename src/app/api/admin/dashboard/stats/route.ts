@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import Student from "@/models/Student";
-import StudentDocument from "@/models/StudentDocument";
+import Document from "@/models/Document";
 import DownloadLog from "@/models/DownloadLog";
 import Inquiry from "@/models/Inquiry";
+import { backfillStudentDocumentsToDocuments } from "@/lib/documentBackfill";
 
 export async function GET() {
   try {
     await connectToDatabase();
+    await backfillStudentDocumentsToDocuments();
 
     const totalStudents = await Student.countDocuments();
     const activeStudents = await Student.countDocuments({ status: "active" });
@@ -16,12 +18,12 @@ export async function GET() {
     // Exact locked admit cards
     const studentsWithPendingFees = await Student.find({ feeStatus: { $ne: "clear" } }).select("_id");
     const pendingFeeStudentIds = studentsWithPendingFees.map(s => s._id);
-    const lockedAdmitCards = await StudentDocument.countDocuments({
+    const lockedAdmitCards = await Document.countDocuments({
       type: "admit_card",
       studentId: { $in: pendingFeeStudentIds }
     });
 
-    const totalDocuments = await StudentDocument.countDocuments();
+    const totalDocuments = await Document.countDocuments();
     const totalDownloads = await DownloadLog.countDocuments();
     
     const newInquiries = await Inquiry.countDocuments({ status: "new" });

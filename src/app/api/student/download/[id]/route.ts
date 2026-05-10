@@ -5,6 +5,8 @@ import connectToDatabase from "@/lib/mongodb";
 import Document from "@/models/Document";
 import Student from "@/models/Student";
 import DownloadLog from "@/models/DownloadLog";
+import { backfillStudentDocumentsToDocuments } from "@/lib/documentBackfill";
+import { getSafeRemainingBalance } from "@/lib/feeMath";
 import { getFileStreamFromOracle } from "@/lib/oracleStorage";
 import { getSignedPdfDownloadUrl } from "@/lib/r2";
 import { verifyToken } from "@/lib/auth";
@@ -34,23 +36,29 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const { id: documentId } = await context.params;
 
     // 1. Fetch Document
-    const document = await Document.findById(documentId);
+    let document = await Document.findById(documentId);
+    if (!document) {
+      await backfillStudentDocumentsToDocuments({ _id: documentId });
+      document = await Document.findById(documentId);
+    }
     if (!document) {
       return NextResponse.json({ success: false, message: "Document not found" }, { status: 404 });
     }
 
-    // 2. Fetch Student
-    const student = await Student.findById(document.studentId);
-    if (!student) {
-      return NextResponse.json({ success: false, message: "Student record not found" }, { status: 404 });
-    }
+    const documentStudentId = document.studentId?.toString();
 
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get("student_session")?.value;
     const session = sessionToken ? await verifyToken(sessionToken) : null;
-    if (!session || session.studentId !== student._id.toString()) {
-      await logAttempt(student._id.toString(), documentId, "failed", "Invalid student session", request);
+    if (!documentStudentId || !session || session.studentId !== documentStudentId) {
+      await logAttempt(documentStudentId || "unknown", documentId, "failed", "Invalid student session", request);
       return NextResponse.json({ success: false, message: "Please sign in to the student portal again." }, { status: 403 });
+    }
+
+    // 2. Fetch Student linked to the verified session and document
+    const student = await Student.findById(documentStudentId);
+    if (!student) {
+      return NextResponse.json({ success: false, message: "Student record not found" }, { status: 404 });
     }
 
     // 3. Security Check: Is it published?
@@ -65,22 +73,31 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
       return NextResponse.json({ success: false, message: "Student account is inactive." }, { status: 403 });
     }
 
-    // 5. Security Check: Fee Clearance & Blocks (If required and no manual override)
-    if (document.type === "admit_card" && (student.feeStatus !== "clear" || student.remainingBalance > 0)) {
-      await logAttempt(student._id.toString(), documentId, "failed", "Admit card fee clearance required", request);
-      return NextResponse.json({ success: false, message: "Please clear your pending dues to download your admit card." }, { status: 403 });
-    }
-
-    if (document.requiresFeeClearance && !document.downloadAllowed) {
+    // 5. Security Check: Fee/status gates and explicit admin download lock
+    const requiresFeeClearance = Boolean(document.requiresFeeClearance) || document.type === "admit_card";
+    if (requiresFeeClearance) {
       if (student.isManuallyBlocked) {
         await logAttempt(student._id.toString(), documentId, "failed", "Manually Blocked by Admin", request);
         return NextResponse.json({ success: false, message: "Admit card access is blocked. Please contact administration." }, { status: 403 });
       }
 
-      if (student.remainingBalance > 0 && student.feeStatus !== "clear") {
+      const remainingBalance = getSafeRemainingBalance({
+        finalPayableFee: student.finalPayableFee,
+        totalProgramFee: student.totalProgramFee,
+        discountAmount: student.discountAmount,
+        totalPaid: student.totalPaid,
+        remainingBalance: student.remainingBalance,
+      });
+
+      if (remainingBalance > 0 || student.feeStatus !== "clear") {
         await logAttempt(student._id.toString(), documentId, "failed", "Fee Pending", request);
         return NextResponse.json({ success: false, message: "Please clear your pending dues to download this document." }, { status: 403 });
       }
+    }
+
+    if (document.downloadAllowed === false) {
+      await logAttempt(student._id.toString(), documentId, "failed", "Document download locked by admin", request);
+      return NextResponse.json({ success: false, message: "Document download is currently locked by administration." }, { status: 403 });
     }
 
     // 6. Security Check Passed: Fetch from R2 or Oracle
@@ -88,6 +105,10 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
       try {
         const signedUrl = await getSignedPdfDownloadUrl(document.fileKey, document.originalFileName);
         await logAttempt(student._id.toString(), documentId, "success", "Generated R2 signed URL", request);
+
+        if (request.headers.get("accept")?.includes("application/json")) {
+          return NextResponse.json({ success: true, url: signedUrl });
+        }
         
         // Next.js standard way to redirect to the signed URL
         return NextResponse.redirect(signedUrl);

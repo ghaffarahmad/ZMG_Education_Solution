@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import connectToDatabase from "@/lib/mongodb";
 import Document from "@/models/Document";
 import { deleteFromOracleStorage } from "@/lib/oracleStorage";
@@ -6,21 +7,55 @@ import { deletePdfFromR2 } from "@/lib/r2";
 import { writeAuditLog } from "@/lib/adminAudit";
 
 const ALLOWED_DOCUMENT_UPDATES = new Set(["isPublished", "downloadAllowed", "requiresFeeClearance", "title"]);
+const BOOLEAN_DOCUMENT_UPDATES = new Set(["isPublished", "downloadAllowed", "requiresFeeClearance"]);
+
+function sanitizeDocument(document: { toObject(): Record<string, unknown> }) {
+  const plain = document.toObject();
+  delete plain.oracleObjectName;
+  delete plain.fileKey;
+  return plain;
+}
 
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     await connectToDatabase();
     const { id } = await context.params;
-    const updates = await request.json();
-    const safeUpdates = Object.fromEntries(
-      Object.entries(updates).filter(([key]) => ALLOWED_DOCUMENT_UPDATES.has(key))
-    );
+
+    if (!mongoose.isValidObjectId(id)) {
+      return NextResponse.json({ success: false, message: "Invalid document id" }, { status: 400 });
+    }
+
+    const updates = await request.json().catch(() => null);
+    if (!updates || typeof updates !== "object" || Array.isArray(updates)) {
+      return NextResponse.json({ success: false, message: "Invalid JSON payload" }, { status: 400 });
+    }
+
+    const safeUpdates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(updates)) {
+      if (!ALLOWED_DOCUMENT_UPDATES.has(key)) continue;
+
+      if (BOOLEAN_DOCUMENT_UPDATES.has(key)) {
+        if (typeof value !== "boolean") {
+          return NextResponse.json({ success: false, message: `${key} must be a boolean` }, { status: 400 });
+        }
+        safeUpdates[key] = value;
+        continue;
+      }
+
+      if (key === "title") {
+        if (typeof value !== "string" || value.trim().length === 0) {
+          return NextResponse.json({ success: false, message: "Title must be a non-empty string" }, { status: 400 });
+        }
+        safeUpdates.title = value.trim();
+      }
+    }
 
     if (Object.keys(safeUpdates).length === 0) {
       return NextResponse.json({ success: false, message: "No valid document updates provided" }, { status: 400 });
     }
 
-    const document = await Document.findByIdAndUpdate(id, { $set: safeUpdates }, { new: true });
+    const document = await Document.findByIdAndUpdate(id, { $set: safeUpdates }, { new: true, runValidators: true })
+      .populate("studentId", "studentName cnicOrBform board program feeStatus finalPayableFee totalPaid remainingBalance isManuallyBlocked");
     
     if (!document) {
       return NextResponse.json({ success: false, message: "Document not found" }, { status: 404 });
@@ -35,6 +70,10 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
           ? document.requiresFeeClearance
             ? "document_lock"
             : "document_unlock"
+          : "downloadAllowed" in safeUpdates
+            ? document.downloadAllowed
+              ? "document_download_allow"
+              : "document_download_lock"
           : "document_update";
 
     await writeAuditLog({
@@ -46,7 +85,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
       metadata: safeUpdates,
     });
 
-    return NextResponse.json({ success: true, data: document });
+    return NextResponse.json({ success: true, data: sanitizeDocument(document) });
   } catch (error: any) {
     console.error("PATCH Document Error:", error);
     await writeAuditLog({

@@ -34,6 +34,9 @@ export function DocumentUploadForm({ studentId, onUploadSuccess }: { studentId: 
     formData.append("studentId", studentId);
     formData.append("type", data.type);
     formData.append("title", data.title);
+    formData.append("isPublished", "true");
+    formData.append("downloadAllowed", "true");
+    formData.append("requiresFeeClearance", String(data.type === "admit_card"));
     formData.append("file", file);
 
     try {

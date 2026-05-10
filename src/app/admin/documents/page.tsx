@@ -57,6 +57,79 @@ const DOCUMENT_TYPES = [
   { value: "other", label: "Other Document" },
 ];
 
+type ApiPayload<T = unknown> = {
+  success?: boolean;
+  message?: string;
+  data?: T;
+};
+
+const nonJsonResponseMessage = "Server returned a non-JSON response. Please check login/session or API route.";
+
+async function readApiPayload<T>(response: Response): Promise<ApiPayload<T> | null> {
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) return null;
+
+  try {
+    return (await response.json()) as ApiPayload<T>;
+  } catch {
+    return null;
+  }
+}
+
+function responseErrorMessage<T>(payload: ApiPayload<T> | null, fallback: string) {
+  return payload?.message || (payload === null ? nonJsonResponseMessage : fallback);
+}
+
+function isFeeClear(document: AdminDocument) {
+  return document.studentId?.feeStatus === "clear";
+}
+
+function getDocumentAccessMessage(document: AdminDocument) {
+  const feeClear = isFeeClear(document);
+
+  if (!document.downloadAllowed && feeClear) return "Locked by admin";
+  if (document.requiresFeeClearance && !feeClear) return "Locked until fee clear";
+  if (document.downloadAllowed && feeClear) return "Ready to download";
+  if (document.downloadAllowed && !feeClear && document.requiresFeeClearance) return "Waiting for fee clearance";
+  if (!document.downloadAllowed) return "Locked by admin";
+  return "Ready to download";
+}
+
+function getDocumentAccessClass(document: AdminDocument) {
+  const message = getDocumentAccessMessage(document);
+  if (message === "Ready to download") return "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-200";
+  if (message === "Locked by admin") return "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-200";
+  return "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-200";
+}
+
+function DownloadAllowedButton({
+  document,
+  onToggle,
+  className = "",
+}: {
+  document: AdminDocument;
+  onToggle: () => void;
+  className?: string;
+}) {
+  const Icon = document.downloadAllowed ? Unlock : Lock;
+  const label = document.downloadAllowed ? "Allowed" : "Locked";
+  const styles = document.downloadAllowed
+    ? "border-green-200 bg-green-50 text-green-700 dark:border-green-500/20 dark:bg-green-500/10 dark:text-green-200"
+    : "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-200";
+
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className={`inline-flex items-center rounded-md border px-2 py-1 text-xs font-semibold ${styles} ${className}`}
+      title={document.downloadAllowed ? "Click to lock downloads" : "Click to allow downloads"}
+    >
+      <Icon className="mr-1 h-3 w-3" />
+      {label}
+    </button>
+  );
+}
+
 function DocumentTableSkeletonRows() {
   return (
     <>
@@ -105,8 +178,8 @@ export default function AdminDocumentsPage() {
   const [locked, setLocked] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [documentType, setDocumentType] = useState<"admit_card" | "enrollment_card" | "other">("admit_card");
-  const [isPublished, setIsPublished] = useState(false);
-  const [downloadAllowed, setDownloadAllowed] = useState(false);
+  const [isPublished, setIsPublished] = useState(true);
+  const [downloadAllowed, setDownloadAllowed] = useState(true);
   const [requiresFeeClearance, setRequiresFeeClearance] = useState(true);
   const [replaceExisting, setReplaceExisting] = useState(false);
   const [bulkFiles, setBulkFiles] = useState<File[]>([]);
@@ -130,12 +203,12 @@ export default function AdminDocumentsPage() {
     setLoading(true);
     try {
       const res = await fetch(`/api/admin/documents?${buildQuery().toString()}`);
-      const json = await res.json();
-      if (json.success) {
-        setDocuments(json.data);
-      } else {
-        toast.error(json.message || "Failed to load documents");
+      const payload = await readApiPayload<AdminDocument[]>(res);
+      if (!res.ok || !payload?.success) {
+        toast.error(responseErrorMessage(payload, "Failed to load documents"));
+        return;
       }
+      setDocuments(payload.data || []);
     } catch {
       toast.error("Failed to load documents");
     } finally {
@@ -179,13 +252,13 @@ export default function AdminDocumentsPage() {
     try {
       const formData = buildBulkFormData("preview", files);
       const res = await fetch("/api/admin/documents/bulk", { method: "POST", body: formData });
-      const json = await res.json();
-      if (json.success) {
-        setPreviewRows(json.data.rows || []);
-        toast.success(`Preview ready: ${json.data.readyCount} ready, ${json.data.errorCount} errors`);
-      } else {
-        toast.error(json.message || "Preview failed");
+      const payload = await readApiPayload<{ rows?: PreviewRow[]; readyCount?: number; errorCount?: number }>(res);
+      if (!res.ok || !payload?.success) {
+        toast.error(responseErrorMessage(payload, "Preview failed"));
+        return;
       }
+      setPreviewRows(payload.data?.rows || []);
+      toast.success(`Preview ready: ${payload.data?.readyCount || 0} ready, ${payload.data?.errorCount || 0} errors`);
     } catch {
       toast.error("Preview failed");
     } finally {
@@ -204,16 +277,16 @@ export default function AdminDocumentsPage() {
     setBulkUploading(true);
     try {
       const res = await fetch("/api/admin/documents/bulk", { method: "POST", body: buildBulkFormData("confirm") });
-      const json = await res.json();
-      if (json.success) {
-        toast.success(`Bulk upload complete: ${json.data.uploaded} uploaded, ${json.data.replaced} replaced`);
-        setPreviewRows([]);
-        setBulkFiles([]);
-        fetchDocuments();
-      } else {
-        if (json.data?.rows) setPreviewRows(json.data.rows);
-        toast.error(json.message || "Bulk upload failed");
+      const payload = await readApiPayload<{ uploaded?: number; replaced?: number; rows?: PreviewRow[] }>(res);
+      if (!res.ok || !payload?.success) {
+        if (payload?.data?.rows) setPreviewRows(payload.data.rows);
+        toast.error(responseErrorMessage(payload, "Bulk upload failed"));
+        return;
       }
+      toast.success(`Bulk upload complete: ${payload.data?.uploaded || 0} uploaded, ${payload.data?.replaced || 0} replaced`);
+      setPreviewRows([]);
+      setBulkFiles([]);
+      fetchDocuments();
     } catch {
       toast.error("Bulk upload failed");
     } finally {
@@ -223,20 +296,22 @@ export default function AdminDocumentsPage() {
 
   const toggleFlag = async (id: string, field: "isPublished" | "downloadAllowed" | "requiresFeeClearance", currentValue: boolean) => {
     try {
+      const nextValue = !currentValue;
       const res = await fetch(`/api/admin/documents/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [field]: !currentValue }),
+        body: JSON.stringify({ [field]: nextValue }),
       });
-      const json = await res.json();
-      if (json.success) {
-        toast.success("Document updated");
-        setDocuments((current) => current.map((doc) => (doc._id === id ? { ...doc, [field]: !currentValue } : doc)));
-      } else {
-        toast.error(json.message || "Failed to update document");
+
+      const payload = await readApiPayload<Partial<AdminDocument>>(res);
+      if (!res.ok || !payload?.success || !payload.data) {
+        throw new Error(responseErrorMessage(payload, "Document update failed"));
       }
-    } catch {
-      toast.error("An error occurred");
+
+      toast.success("Document updated");
+      setDocuments((current) => current.map((doc) => (doc._id === id ? { ...doc, ...payload.data } : doc)));
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Document update failed");
     }
   };
 
@@ -252,14 +327,14 @@ export default function AdminDocumentsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action, documentIds: selectedIds }),
       });
-      const json = await res.json();
-      if (json.success) {
-        toast.success("Bulk document action applied");
-        setSelectedIds([]);
-        fetchDocuments();
-      } else {
-        toast.error(json.message || "Bulk action failed");
+      const payload = await readApiPayload(res);
+      if (!res.ok || !payload?.success) {
+        toast.error(responseErrorMessage(payload, "Bulk action failed"));
+        return;
       }
+      toast.success("Bulk document action applied");
+      setSelectedIds([]);
+      fetchDocuments();
     } catch {
       toast.error("Bulk action failed");
     }
@@ -269,13 +344,14 @@ export default function AdminDocumentsPage() {
     if (!confirm("Are you sure you want to delete this document permanently?")) return;
     try {
       const res = await fetch(`/api/admin/documents/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        toast.success("Document deleted");
-        setDocuments((current) => current.filter((doc) => doc._id !== id));
-        setSelectedIds((current) => current.filter((docId) => docId !== id));
-      } else {
-        toast.error("Failed to delete document");
+      const payload = await readApiPayload(res);
+      if (!res.ok || !payload?.success) {
+        toast.error(responseErrorMessage(payload, "Failed to delete document"));
+        return;
       }
+      toast.success("Document deleted");
+      setDocuments((current) => current.filter((doc) => doc._id !== id));
+      setSelectedIds((current) => current.filter((docId) => docId !== id));
     } catch {
       toast.error("Error occurred while deleting");
     }
@@ -528,7 +604,12 @@ export default function AdminDocumentsPage() {
                     </div>
                     <div className="rounded-lg bg-slate-50 p-2 dark:bg-white/5">
                       <div className="text-slate-400">Download</div>
-                      <div className="mt-1 font-semibold text-slate-800 dark:text-slate-100">{doc.downloadAllowed ? "Allowed" : "Standard"}</div>
+                      <div className="mt-1">
+                        <DownloadAllowedButton
+                          document={doc}
+                          onToggle={() => toggleFlag(doc._id, "downloadAllowed", doc.downloadAllowed)}
+                        />
+                      </div>
                     </div>
                     <div className="rounded-lg bg-slate-50 p-2 dark:bg-white/5">
                       <div className="text-slate-400">Fee Status</div>
@@ -539,17 +620,20 @@ export default function AdminDocumentsPage() {
                       <div className="mt-1 font-semibold text-slate-800 dark:text-slate-100">{new Date(doc.createdAt).toLocaleDateString("en-GB")}</div>
                     </div>
                   </div>
-                  {doc.requiresFeeClearance && (
-                    <div className="mt-3 inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
-                      <ShieldAlert className="mr-1 h-3 w-3" /> Locked until fee clear
-                    </div>
-                  )}
+                  <div className={`mt-3 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${getDocumentAccessClass(doc)}`}>
+                    <ShieldAlert className="mr-1 h-3 w-3" /> {getDocumentAccessMessage(doc)}
+                  </div>
                   <div className="mt-4 grid grid-cols-2 gap-2">
                     <button onClick={() => toggleFlag(doc._id, "isPublished", doc.isPublished)} className="min-h-10 rounded-lg border border-slate-200 px-2 text-xs font-semibold text-slate-700 dark:border-white/10 dark:text-slate-100">
                       {doc.isPublished ? "Hide" : "Publish"}
                     </button>
+                    <DownloadAllowedButton
+                      document={doc}
+                      onToggle={() => toggleFlag(doc._id, "downloadAllowed", doc.downloadAllowed)}
+                      className="min-h-10 w-full justify-center rounded-lg"
+                    />
                     <button onClick={() => toggleFlag(doc._id, "requiresFeeClearance", doc.requiresFeeClearance)} className="min-h-10 rounded-lg border border-slate-200 px-2 text-xs font-semibold text-slate-700 dark:border-white/10 dark:text-slate-100">
-                      {doc.requiresFeeClearance ? "Unlock" : "Lock"}
+                      {doc.requiresFeeClearance ? "Remove Fee Lock" : "Require Fee Clear"}
                     </button>
                     <a href={`/api/student/download/${doc._id}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center justify-center rounded-lg bg-primary px-2 text-xs font-semibold text-white">
                       Test Download
@@ -632,14 +716,17 @@ export default function AdminDocumentsPage() {
                       </button>
                     </td>
                     <td className="px-4 py-4">
-                      <button onClick={() => toggleFlag(doc._id, "downloadAllowed", doc.downloadAllowed)} className={`inline-flex items-center rounded-md border px-2 py-1 text-xs font-semibold ${doc.downloadAllowed ? "border-green-200 bg-green-50 text-green-700 dark:border-green-500/20 dark:bg-green-500/10 dark:text-green-200" : "border-slate-200 bg-slate-50 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-200"}`}>
-                        {doc.downloadAllowed ? "Allowed" : "Standard"}
-                      </button>
+                      <DownloadAllowedButton
+                        document={doc}
+                        onToggle={() => toggleFlag(doc._id, "downloadAllowed", doc.downloadAllowed)}
+                      />
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex flex-col gap-1">
                         <span className="w-fit rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold uppercase text-slate-700 dark:bg-white/10 dark:text-slate-200">{doc.studentId?.feeStatus || "-"}</span>
-                        {doc.requiresFeeClearance && <span className="inline-flex items-center text-xs font-semibold text-amber-600 dark:text-amber-300"><ShieldAlert className="mr-1 h-3 w-3" /> Locked until fee clear</span>}
+                        <span className={`inline-flex w-fit items-center rounded-full px-2 py-1 text-xs font-semibold ${getDocumentAccessClass(doc)}`}>
+                          <ShieldAlert className="mr-1 h-3 w-3" /> {getDocumentAccessMessage(doc)}
+                        </span>
                       </div>
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">{new Date(doc.createdAt).toLocaleDateString("en-GB")}</td>

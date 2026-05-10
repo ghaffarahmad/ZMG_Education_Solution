@@ -142,10 +142,23 @@ export function StudentDocumentCard({
 
     setDownloadingId(document._id);
     try {
-      const res = await fetch(`/api/student/download/${document._id}`);
+      const res = await fetch(`/api/student/download/${document._id}`, {
+        headers: { Accept: "application/json" },
+      });
       if (!res.ok) {
-        const error = await res.json();
+        const error = await res.json().catch(() => null);
         throw new Error(error.message || "Failed to download");
+      }
+
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        const payload = (await res.json()) as { success?: boolean; url?: string; message?: string };
+        if (!payload.success || !payload.url) {
+          throw new Error(payload.message || "Failed to create secure download link");
+        }
+        window.location.assign(payload.url);
+        toast.success("Secure download link opened");
+        return;
       }
 
       const blob = await res.blob();
