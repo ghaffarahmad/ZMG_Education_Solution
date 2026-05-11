@@ -52,7 +52,7 @@ export const getSignedPdfDownloadUrl = async (fileKey: string, originalName: str
   const command = new GetObjectCommand({
     Bucket: R2_BUCKET_NAME,
     Key: fileKey,
-    ResponseContentDisposition: `inline; filename="${originalName}"`,
+    ResponseContentDisposition: `attachment; filename="${originalName}"`,
   });
 
   // Short-lived signed URL (60 seconds)

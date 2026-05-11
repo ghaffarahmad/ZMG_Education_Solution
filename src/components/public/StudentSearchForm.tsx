@@ -67,8 +67,17 @@ export function StudentSearchForm({ onSearch, isLoading, error }: StudentSearchF
           <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300">Date of Birth</label>
           <div className="relative">
             <input
-              type="date"
+              type="text"
+              placeholder="Select Date of Birth"
               {...register("dob")}
+              onFocus={(e) => {
+                e.target.type = "date";
+                try { if (e.target.showPicker) e.target.showPicker(); } catch (err) {}
+              }}
+              onBlur={(e) => {
+                register("dob").onBlur(e);
+                if (!e.target.value) e.target.type = "text";
+              }}
               className="min-h-[3.5rem] w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-base font-medium text-slate-900 transition-all focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/25 dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:bg-[#0C2A33]"
             />
           </div>

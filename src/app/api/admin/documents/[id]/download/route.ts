@@ -47,7 +47,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 
     const headers = new Headers();
     headers.set("Content-Type", document.mimeType || "application/pdf");
-    headers.set("Content-Disposition", `inline; filename="${document.originalFileName}"`);
+    headers.set("Content-Disposition", `attachment; filename="${document.originalFileName}"`);
     if (document.fileSize) headers.set("Content-Length", document.fileSize.toString());
 
     return new NextResponse(webStream as ReadableStream, {

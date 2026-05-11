@@ -49,6 +49,7 @@ export async function GET(request: Request) {
     const feeStatus = searchParams.get("feeStatus");
     const published = searchParams.get("published");
     const locked = searchParams.get("locked");
+    const gender = searchParams.get("gender");
     
     const query: Record<string, unknown> = {};
     if (studentId) query.studentId = studentId;
@@ -59,13 +60,14 @@ export async function GET(request: Request) {
     if (locked === "false") query.requiresFeeClearance = false;
 
     let documents = await Document.find(query)
-      .populate("studentId", "studentName cnicOrBform board program feeStatus finalPayableFee totalPaid remainingBalance isManuallyBlocked")
+      .populate("studentId", "studentName cnicOrBform board program gender feeStatus finalPayableFee totalPaid remainingBalance isManuallyBlocked")
       .sort({ createdAt: -1 });
 
     documents = documents.filter((doc: any) => {
       const student = doc.studentId;
       if (board && student?.board !== board) return false;
       if (program && student?.program !== program) return false;
+      if (gender && student?.gender !== gender) return false;
       if (feeStatus && student?.feeStatus !== feeStatus) return false;
       if (search) {
         const term = search.toLowerCase();

@@ -74,7 +74,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     }
 
     // 5. Security Check: Fee/status gates and explicit admin download lock
-    const requiresFeeClearance = Boolean(document.requiresFeeClearance) || document.type === "admit_card";
+    const requiresFeeClearance = Boolean(document.requiresFeeClearance);
     if (requiresFeeClearance) {
       if (student.isManuallyBlocked) {
         await logAttempt(student._id.toString(), documentId, "failed", "Manually Blocked by Admin", request);
@@ -142,7 +142,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 
     const headers = new Headers();
     headers.set("Content-Type", document.mimeType || "application/pdf");
-    headers.set("Content-Disposition", `inline; filename="${document.originalFileName}"`);
+    headers.set("Content-Disposition", `attachment; filename="${document.originalFileName}"`);
     if (document.fileSize) headers.set("Content-Length", document.fileSize.toString());
 
     return new NextResponse(webStream as ReadableStream, {

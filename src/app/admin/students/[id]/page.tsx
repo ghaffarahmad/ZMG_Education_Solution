@@ -85,6 +85,7 @@ export default function StudentDetailPage() {
   const [newPayment, setNewPayment] = useState({ amount: "", paymentMethod: "cash", receiptNo: "", note: "" });
   const [academicOptions, setAcademicOptions] = useState<any[]>([]);
   const [enrollments, setEnrollments] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<any[]>([]);
   const [showPromoteModal, setShowPromoteModal] = useState(false);
   const [promoteForm, setPromoteForm] = useState({ board: "", program: "", group: "", session: "", startDate: "", notes: "", markAsCompleted: false });
   const fetchAcademicOptions = async () => {
@@ -138,12 +139,23 @@ export default function StudentDetailPage() {
     }
   };
 
+  const fetchDocuments = async () => {
+    try {
+      const res = await fetch(`/api/admin/documents?studentId=${studentId}`);
+      const json = await res.json();
+      if (json.success) setDocuments(json.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchAcademicOptions();
     if (!isNew) {
       fetchStudent();
       fetchPayments();
       fetchEnrollments();
+      fetchDocuments();
     }
   }, [studentId]);
 
@@ -264,6 +276,39 @@ export default function StudentDetailPage() {
       }
     } catch (error) {
       toast.error("Error deleting payment");
+    }
+  };
+
+  const handleDeleteDocument = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this document permanently?")) return;
+    try {
+      const res = await fetch(`/api/admin/documents/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success("Document deleted");
+        fetchDocuments();
+      } else {
+        toast.error("Failed to delete document");
+      }
+    } catch (error) {
+      toast.error("Error deleting document");
+    }
+  };
+
+  const toggleDocumentFlag = async (id: string, field: "isPublished" | "downloadAllowed" | "requiresFeeClearance", currentValue: boolean) => {
+    try {
+      const res = await fetch(`/api/admin/documents/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [field]: !currentValue }),
+      });
+      if (res.ok) {
+        toast.success("Document updated");
+        fetchDocuments();
+      } else {
+        toast.error("Failed to update document");
+      }
+    } catch (error) {
+      toast.error("Error updating document");
     }
   };
 
@@ -821,8 +866,7 @@ export default function StudentDetailPage() {
                       if (res.ok) {
                         toast.success("Document uploaded successfully");
                         form.reset();
-                        // Refetch documents (need to add a fetch call, but we can just reload for simplicity since it's an admin dashboard)
-                        window.location.reload();
+                        fetchDocuments();
                       } else {
                         toast.error("Failed to upload document");
                       }
@@ -872,22 +916,67 @@ export default function StudentDetailPage() {
                 </form>
               </div>
 
-              {/* List Placeholder */}
               <div className="lg:col-span-2">
-                <div className="admin-card flex h-full flex-col items-center justify-center p-6 text-center sm:p-12">
-                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                    <ShieldAlert className="w-8 h-8 text-slate-400" />
+                {documents.length === 0 ? (
+                  <div className="admin-card flex h-full flex-col items-center justify-center p-6 text-center sm:p-12">
+                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                      <ShieldAlert className="w-8 h-8 text-slate-400" />
+                    </div>
+                    <h4 className="text-lg font-bold text-slate-900 mb-2 dark:text-white">Secure Document Vault</h4>
+                    <p className="text-slate-500 text-sm max-w-md mx-auto mb-6 dark:text-slate-300">
+                      Uploaded documents are securely stored in protected cloud storage. No documents found for this student.
+                    </p>
                   </div>
-                  <h4 className="text-lg font-bold text-slate-900 mb-2 dark:text-white">Secure Document Vault</h4>
-                  <p className="text-slate-500 text-sm max-w-md mx-auto mb-6 dark:text-slate-300">
-                    Uploaded documents are securely stored in protected cloud storage. To view or manage uploaded documents, go to the centralized Document Center.
-                  </p>
-                  <Button asChild variant="outline" className="w-full sm:w-auto">
-                    <Link href={`/admin/documents?search=${student.cnicOrBform}`}>
-                      Manage Student Documents
-                    </Link>
-                  </Button>
-                </div>
+                ) : (
+                  <div className="space-y-3">
+                    {documents.map(doc => (
+                      <div key={doc._id} className="admin-card p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="truncate text-base font-bold text-slate-900 dark:text-white">{doc.title}</p>
+                            <p className="font-mono text-xs text-slate-500 dark:text-slate-300 uppercase">{doc.type.replace(/_/g, " ")}</p>
+                          </div>
+                          <span className={`shrink-0 rounded-full px-2 py-1 text-[11px] font-bold uppercase ${doc.isPublished ? "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-200" : "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"}`}>
+                            {doc.isPublished ? "Published" : "Hidden"}
+                          </span>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                          <div className="rounded-lg bg-slate-50 p-2 dark:bg-white/5">
+                            <div className="text-slate-400">Download</div>
+                            <div className={`mt-1 font-semibold ${doc.downloadAllowed ? "text-green-600 dark:text-green-300" : "text-amber-600 dark:text-amber-300"}`}>
+                              {doc.downloadAllowed ? "Allowed" : "Locked"}
+                            </div>
+                          </div>
+                          <div className="rounded-lg bg-slate-50 p-2 dark:bg-white/5">
+                            <div className="text-slate-400">Fee Lock</div>
+                            <div className={`mt-1 font-semibold ${doc.requiresFeeClearance ? "text-amber-600 dark:text-amber-300" : "text-green-600 dark:text-green-300"}`}>
+                              {doc.requiresFeeClearance ? "Required" : "Not Required"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                          <button onClick={() => toggleDocumentFlag(doc._id, "isPublished", doc.isPublished)} className="min-h-10 rounded-lg border border-slate-200 px-2 text-xs font-semibold text-slate-700 dark:border-white/10 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-white/5">
+                            {doc.isPublished ? "Hide" : "Publish"}
+                          </button>
+                          <button onClick={() => toggleDocumentFlag(doc._id, "downloadAllowed", doc.downloadAllowed)} className="min-h-10 rounded-lg border border-slate-200 px-2 text-xs font-semibold text-slate-700 dark:border-white/10 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-white/5">
+                            {doc.downloadAllowed ? "Lock" : "Allow DL"}
+                          </button>
+                          <button onClick={() => toggleDocumentFlag(doc._id, "requiresFeeClearance", doc.requiresFeeClearance)} className="min-h-10 rounded-lg border border-slate-200 px-2 text-xs font-semibold text-slate-700 dark:border-white/10 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-white/5">
+                            {doc.requiresFeeClearance ? "No Fee Lock" : "Add Fee Lock"}
+                          </button>
+                          <a href={`/api/admin/documents/${doc._id}/download`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center justify-center rounded-lg bg-primary px-2 text-xs font-semibold text-white hover:bg-primary/90 dark:bg-accent dark:text-[#092128]">
+                            Download
+                          </a>
+                        </div>
+                        <div className="mt-2 text-right">
+                          <button onClick={() => handleDeleteDocument(doc._id)} className="text-xs font-semibold text-red-600 hover:text-red-700 dark:text-red-400">
+                            Delete Document
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

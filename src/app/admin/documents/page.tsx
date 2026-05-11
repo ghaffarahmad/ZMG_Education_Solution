@@ -18,7 +18,6 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import { DocumentCardSkeleton, SkeletonBlock, SkeletonLine } from "@/components/ui/Skeleton";
-import { BOARD_OPTIONS, PROGRAM_OPTIONS } from "@/lib/studentRules";
 
 type AdminDocument = {
   _id: string;
@@ -173,6 +172,7 @@ export default function AdminDocumentsPage() {
   const [type, setType] = useState("");
   const [board, setBoard] = useState("");
   const [program, setProgram] = useState("");
+  const [gender, setGender] = useState("");
   const [feeStatus, setFeeStatus] = useState("");
   const [published, setPublished] = useState("");
   const [locked, setLocked] = useState("");
@@ -185,6 +185,7 @@ export default function AdminDocumentsPage() {
   const [bulkFiles, setBulkFiles] = useState<File[]>([]);
   const [previewRows, setPreviewRows] = useState<PreviewRow[]>([]);
   const [bulkUploading, setBulkUploading] = useState(false);
+  const [academicOptions, setAcademicOptions] = useState<any[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const buildQuery = () => {
@@ -193,6 +194,7 @@ export default function AdminDocumentsPage() {
     if (type) query.append("type", type);
     if (board) query.append("board", board);
     if (program) query.append("program", program);
+    if (gender) query.append("gender", gender);
     if (feeStatus) query.append("feeStatus", feeStatus);
     if (published) query.append("published", published);
     if (locked) query.append("locked", locked);
@@ -216,10 +218,24 @@ export default function AdminDocumentsPage() {
     }
   };
 
+  const fetchAcademicOptions = async () => {
+    try {
+      const res = await fetch("/api/admin/academic-options?activeOnly=true");
+      const json = await res.json();
+      if (json.success) setAcademicOptions(json.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAcademicOptions();
+  }, []);
+
   useEffect(() => {
     const timer = window.setTimeout(fetchDocuments, 300);
     return () => window.clearTimeout(timer);
-  }, [search, type, board, program, feeStatus, published, locked]);
+  }, [search, type, board, program, gender, feeStatus, published, locked]);
 
   const maskCnic = (cnic: string) => {
     if (!cnic || cnic.length < 13) return cnic;
@@ -377,7 +393,7 @@ export default function AdminDocumentsPage() {
       </div>
 
       <div className="admin-card p-4">
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-7">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-8">
           <div className="relative xl:col-span-2">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
@@ -394,13 +410,15 @@ export default function AdminDocumentsPage() {
             <option value="enrollment_card">Enrollment Card</option>
             <option value="other">Other</option>
           </select>
-          <select value={board} onChange={(event) => setBoard(event.target.value)} className="admin-input min-h-10 rounded-lg px-3 py-2 text-sm">
+          <select value={board} onChange={(event) => { setBoard(event.target.value); setProgram(""); }} className="admin-input min-h-10 rounded-lg px-3 py-2 text-sm">
             <option value="">All Boards</option>
-            {BOARD_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}
+            {academicOptions.filter(o => o.type === "board").map((item) => <option key={item._id} value={item.name}>{item.name}</option>)}
           </select>
           <select value={program} onChange={(event) => setProgram(event.target.value)} className="admin-input min-h-10 rounded-lg px-3 py-2 text-sm">
             <option value="">All Programs</option>
-            {PROGRAM_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}
+            {academicOptions
+              .filter(o => o.type === "program" && (!o.boardId || (board && academicOptions.find(b => b.name === board)?._id === o.boardId)))
+              .map((item) => <option key={item._id} value={item.name}>{item.name}</option>)}
           </select>
           <select value={feeStatus} onChange={(event) => setFeeStatus(event.target.value)} className="admin-input min-h-10 rounded-lg px-3 py-2 text-sm">
             <option value="">All Fee Status</option>
@@ -410,7 +428,12 @@ export default function AdminDocumentsPage() {
             <option value="overdue">Overdue</option>
             <option value="blocked">Blocked</option>
           </select>
-          <div className="grid grid-cols-2 gap-2">
+          <select value={gender} onChange={(event) => setGender(event.target.value)} className="admin-input min-h-10 rounded-lg px-3 py-2 text-sm">
+            <option value="">All Genders</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <div className="grid grid-cols-2 gap-2 xl:col-span-2">
             <select value={published} onChange={(event) => setPublished(event.target.value)} className="admin-input min-h-10 rounded-lg px-3 py-2 text-sm">
               <option value="">Published</option>
               <option value="true">Yes</option>

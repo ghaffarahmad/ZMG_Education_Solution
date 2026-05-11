@@ -113,7 +113,7 @@ export function getDocumentAccessStatus(document: PortalDocument | undefined, st
   if (document.isPublished === false) return "not_published";
 
   const feePending = getRemainingBalance(student) > 0 || student.feeStatus !== "clear";
-  const requiresFeeClearance = Boolean(document.requiresFeeClearance) || document.type === "admit_card";
+  const requiresFeeClearance = Boolean(document.requiresFeeClearance);
   const lockedByAdmin = Boolean(student.isManuallyBlocked) || student.feeStatus === "blocked";
 
   if (requiresFeeClearance && lockedByAdmin) return "locked";
