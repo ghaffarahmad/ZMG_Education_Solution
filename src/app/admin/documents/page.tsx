@@ -635,7 +635,7 @@ export default function AdminDocumentsPage() {
                     <button onClick={() => toggleFlag(doc._id, "requiresFeeClearance", doc.requiresFeeClearance)} className="min-h-10 rounded-lg border border-slate-200 px-2 text-xs font-semibold text-slate-700 dark:border-white/10 dark:text-slate-100">
                       {doc.requiresFeeClearance ? "Remove Fee Lock" : "Require Fee Clear"}
                     </button>
-                    <a href={`/api/student/download/${doc._id}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center justify-center rounded-lg bg-primary px-2 text-xs font-semibold text-white">
+                    <a href={`/api/admin/documents/${doc._id}/download`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center justify-center rounded-lg bg-primary px-2 text-xs font-semibold text-white">
                       Test Download
                     </a>
                     <button onClick={() => handleDelete(doc._id)} className="min-h-10 rounded-lg border border-red-200 px-2 text-xs font-semibold text-red-600 dark:border-red-500/20 dark:text-red-200">
@@ -735,7 +735,7 @@ export default function AdminDocumentsPage() {
                         <button onClick={() => toggleFlag(doc._id, "requiresFeeClearance", doc.requiresFeeClearance)} className="admin-icon-action rounded-lg p-2" title={doc.requiresFeeClearance ? "Unlock document" : "Lock document"}>
                           {doc.requiresFeeClearance ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
                         </button>
-                        <a href={`/api/student/download/${doc._id}`} target="_blank" rel="noopener noreferrer" className="admin-icon-action rounded-lg p-2" title="Test secure download">
+                        <a href={`/api/admin/documents/${doc._id}/download`} target="_blank" rel="noopener noreferrer" className="admin-icon-action rounded-lg p-2" title="Test secure download">
                           <DownloadCloud className="h-4 w-4" />
                         </a>
                         <button onClick={() => handleDelete(doc._id)} className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-slate-300 dark:hover:bg-red-500/10 dark:hover:text-red-300" title="Delete Document">
