@@ -68,16 +68,11 @@ export function StudentSearchForm({ onSearch, isLoading, error }: StudentSearchF
         <div>
           <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300">Date of Birth</label>
           <div className="relative">
-            {!dobValue && (
-              <div className="pointer-events-none absolute inset-0 z-0 flex items-center px-4 text-base font-medium text-slate-400 dark:text-slate-500 rounded-xl bg-slate-50/50 dark:bg-white/5">
-                Select Date of Birth
-              </div>
-            )}
             <input
               type="date"
               {...register("dob")}
-              className={`relative z-10 min-h-[3.5rem] w-full rounded-xl border border-slate-200 bg-transparent px-4 py-3 text-base font-medium transition-all focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/25 dark:border-white/10 dark:focus:bg-[#0C2A33] [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:dark:invert ${
-                !dobValue ? "text-transparent" : "text-slate-900 bg-slate-50/50 dark:bg-white/5 dark:text-white"
+              className={`min-h-[3.5rem] w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-base font-medium transition-all focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/25 dark:border-white/10 dark:bg-white/5 dark:focus:bg-[#0C2A33] [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:dark:invert ${
+                !dobValue ? "text-slate-400 dark:text-slate-500" : "text-slate-900 dark:text-white"
               }`}
             />
           </div>

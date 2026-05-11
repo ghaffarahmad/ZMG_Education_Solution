@@ -117,14 +117,6 @@ export function createSeoMetadata({
     alternates: {
       canonical: url,
     },
-    icons: {
-      icon: [
-        { url: "/icon.png", type: "image/png" },
-        { url: "/favicon.png", type: "image/png" },
-      ],
-      shortcut: "/icon.png",
-      apple: "/icon.png",
-    },
     openGraph: {
       title,
       description,
