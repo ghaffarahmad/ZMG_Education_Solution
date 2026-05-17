@@ -4,6 +4,8 @@ import Notice from "@/models/Notice";
 import { noticeSchema, validationMessage } from "@/lib/apiValidation";
 import { writeAuditLog } from "@/lib/adminAudit";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     await connectToDatabase();

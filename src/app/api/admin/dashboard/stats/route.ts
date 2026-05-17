@@ -6,6 +6,8 @@ import DownloadLog from "@/models/DownloadLog";
 import Inquiry from "@/models/Inquiry";
 import { backfillStudentDocumentsToDocuments } from "@/lib/documentBackfill";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     await connectToDatabase();
