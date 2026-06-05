@@ -79,7 +79,7 @@ export function Footer() {
   ].filter(link => link.href);
 
   return (
-    <footer className="bg-primary pb-10 pt-10 text-white sm:pb-8 sm:pt-16">
+    <footer className="bg-primary pb-24 pt-10 text-white sm:pb-8 sm:pt-16">
       <Container>
         <div className="mb-8 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           {/* Column 1: Brand */}
@@ -166,9 +166,9 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col items-center gap-5 border-t border-slate-700/50 pt-6 md:flex-row md:justify-between md:gap-0">
-          <div className="order-3 text-center md:order-1 md:w-1/3 md:text-left">
+          <div className="order-3 px-12 text-center md:order-1 md:w-1/3 md:px-0 md:text-left">
             <p className="text-slate-400 text-sm">
-              &copy; {currentYear} {brandName}.<br className="hidden md:block lg:hidden" /> All rights reserved.
+              &copy; {currentYear} {brandName}.<br className="block sm:hidden" /> All rights reserved.
             </p>
           </div>
           

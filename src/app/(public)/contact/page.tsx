@@ -146,37 +146,37 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#F7F7F4] text-slate-900 dark:bg-[#092128] dark:text-white">
-      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#103743_48%,#071B21_100%)] py-16 text-white sm:py-20 lg:py-24">
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#103743_48%,#071B21_100%)] py-4 text-white sm:py-6 lg:py-8">
         <div className="premium-pattern absolute inset-0 opacity-55" aria-hidden="true" />
-        <div className="absolute left-6 top-12 h-28 w-px rotate-12 bg-accent/40" aria-hidden="true" />
+        <div className="absolute left-6 top-12 h-28 w-px rotate-12 bg-accent/40 animate-pulse" aria-hidden="true" />
         <div className="absolute bottom-10 right-10 h-px w-44 -rotate-12 bg-accent/35" aria-hidden="true" />
 
         <Container className="relative">
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.82fr)]">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.82fr)]">
             <div className="premium-fade-up max-w-4xl">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-accent">
-                <ShieldCheck className="h-4 w-4" />
+              <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 bg-gradient-to-r from-accent/15 to-transparent px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-accent transition-all hover:border-accent/60 sm:mb-4 sm:px-3.5 sm:py-1.5 sm:text-[10px]">
+                <ShieldCheck className="h-3 w-3 animate-pulse sm:h-3.5 sm:w-3.5" />
                 Contact Support Desk
               </div>
-              <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-7xl">
+              <h1 className="text-2xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Contact Our Office
               </h1>
-              <p className="mt-6 max-w-3xl text-base leading-8 text-slate-200 sm:text-lg">
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-200 sm:mt-4 sm:text-base sm:leading-7">
                 Reach Z.M.G Education Solution for Admission Support, Board Support, Fee Verification, Enrollment Card Access, Admit Card Access, and Student Document Portal assistance.
               </p>
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:gap-2.5">
                 <a
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="premium-soft-glow inline-flex min-h-12 items-center justify-center rounded-xl bg-accent px-5 py-3 text-sm font-black text-primary shadow-lg shadow-accent/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f0cf61]"
+                  className="premium-soft-glow inline-flex min-h-10 items-center justify-center rounded-xl bg-accent px-4 py-2 text-xs font-black text-primary shadow-md shadow-accent/20 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:bg-[#f0cf61] sm:min-h-11 sm:px-5 sm:text-sm"
                 >
                   Contact on WhatsApp
                   <MessageSquare className="ml-2 h-4 w-4" />
                 </a>
                 <a
                   href="#inquiry-form"
-                  className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-black text-white shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/80 hover:bg-white/15"
+                  className="inline-flex min-h-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-xs font-black text-white shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:border-accent/80 hover:bg-white/15 sm:min-h-11 sm:px-5 sm:text-sm"
                 >
                   Send Inquiry
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -185,25 +185,25 @@ export default function ContactPage() {
             </div>
 
             <div className="premium-slide-in">
-              <div className="premium-accent-sweep rounded-2xl border border-white/15 bg-white/10 p-5 shadow-2xl shadow-black/25 backdrop-blur-md sm:p-6">
-                <div className="flex items-start justify-between gap-5 border-b border-white/10 pb-5">
+              <div className="premium-accent-sweep rounded-2xl border border-white/15 bg-white/5 p-4 shadow-xl shadow-black/25 backdrop-blur-md sm:p-5">
+                <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3 sm:gap-5 sm:pb-4">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-[0.2em] text-accent">Office Desk</p>
-                    <h2 className="mt-2 text-2xl font-black text-white">Parent-friendly support</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                    <p className="text-[9px] font-black uppercase tracking-[0.16em] text-accent sm:text-[10px]">Office Desk</p>
+                    <h2 className="mt-1 text-lg font-black text-white sm:text-xl">Parent-friendly support</h2>
+                    <p className="mt-1 text-xs leading-5 text-slate-350">
                       Clear communication for students, parents, and document-related support.
                     </p>
                   </div>
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
-                    <UserCheck className="h-6 w-6" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-primary shadow-sm sm:h-10 sm:w-10 sm:rounded-xl">
+                    <UserCheck className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                 </div>
 
-                <div className="mt-5 grid gap-3">
+                <div className="mt-3 grid gap-2 sm:mt-4 sm:gap-2.5">
                   {["Admission Support", "Board Support", "Student Document Portal"].map((item) => (
-                    <div key={item} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 p-3">
-                      <CheckCircle2 className="h-5 w-5 text-accent" />
-                      <span className="text-sm font-bold text-white">{item}</span>
+                    <div key={item} className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/10 p-2.5 sm:p-3">
+                      <CheckCircle2 className="h-4 w-4 text-accent" />
+                      <span className="text-xs font-bold text-white sm:text-sm">{item}</span>
                     </div>
                   ))}
                 </div>

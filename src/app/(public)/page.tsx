@@ -65,7 +65,7 @@ async function getHomepageNotices(): Promise<PublicNotice[]> {
   }
 }
 
-const whatsappNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923143061669").replace(/[^0-9]/g, "");
+const whatsappNumber = "923143061669";
 const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
 const supportCards = [
@@ -330,37 +330,38 @@ async function LatestNoticesSection() {
 export default function HomePage() {
   return (
     <div className="min-h-screen overflow-hidden bg-[#F7F7F4] text-slate-900 dark:bg-[#092128] dark:text-white">
+      {/* Hero Section */}
       <section
         data-floating-whatsapp-safe-zone
-        className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#103743_48%,#071B21_100%)] py-8 text-white sm:py-20 lg:py-24"
+        className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#134E5A_50%,#092128_100%)] py-4 text-white sm:py-6 lg:py-8"
       >
-        <div className="premium-pattern absolute inset-0 opacity-55" aria-hidden="true" />
-        <div className="absolute left-6 top-12 h-28 w-px rotate-12 bg-accent/40" aria-hidden="true" />
+        <div className="premium-pattern absolute inset-0 opacity-50" aria-hidden="true" />
+        <div className="absolute left-6 top-12 h-28 w-px rotate-12 bg-accent/40 animate-pulse" aria-hidden="true" />
         <div className="absolute bottom-10 right-10 h-px w-44 -rotate-12 bg-accent/35" aria-hidden="true" />
 
         <Container className="relative">
-          <div className="grid items-center gap-7 lg:grid-cols-[minmax(0,1.04fr)_minmax(340px,0.96fr)] lg:gap-10">
+          <div className="grid items-center gap-5 lg:grid-cols-[minmax(0,1.06fr)_minmax(330px,0.94fr)] lg:gap-10">
             <div className="premium-fade-up max-w-3xl">
-              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-5 sm:gap-2 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
-                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-gradient-to-r from-accent/15 to-transparent px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-accent transition-all hover:border-accent/60 sm:mb-4 sm:px-3.5 sm:py-1.5 sm:text-[10px]">
+                <Sparkles className="h-3 w-3 animate-pulse sm:h-3.5 sm:w-3.5" />
                 Secure Digital Access
               </div>
-              <h1 className="text-[2rem] font-black leading-[1.1] tracking-tight text-white min-[390px]:text-[2.1rem] sm:text-5xl lg:text-7xl">
+              <h1 className="text-[1.8rem] font-black leading-[1.1] tracking-tight text-white min-[390px]:text-[1.95rem] sm:text-4xl lg:text-5xl">
                 <span className="sm:hidden">Student Document Portal</span>
                 <span className="hidden sm:inline">Student Admission & Document Support Portal</span>
               </h1>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-200 sm:hidden">
+              <p className="mt-3 max-w-2xl text-xs leading-5 text-slate-200 sm:hidden">
                 Admission support, board support, enrollment cards, admit cards, notices, and secure student document access.
               </p>
-              <p className="mt-6 hidden max-w-3xl text-lg leading-8 text-slate-200 sm:block">
+              <p className="mt-4 hidden max-w-2xl text-sm leading-6 text-slate-250 sm:block">
                 Access enrollment cards, admit cards, notices, Admission Support, Board Support, and AIOU University Program Support through a secure digital portal.
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-2 sm:mt-8 sm:gap-2.5">
-                {["Karachi Board", "Ziauddin Board", "AIOU", "Student Portal", "Secure Document Access"].map((chip, index) => (
+              <div className="mt-4 flex flex-wrap gap-1.5 sm:mt-5 sm:gap-2">
+                {["Karachi Board", "Ziauddin Board", "AIOU Support", "Student Portal", "Secure Access"].map((chip, index) => (
                   <span
                     key={chip}
-                    className="premium-fade-up inline-flex min-h-8 items-center rounded-full border border-white/15 bg-white/10 px-3 text-xs font-bold text-slate-100 backdrop-blur sm:min-h-9 sm:px-3.5 sm:text-sm"
+                    className="premium-fade-up inline-flex min-h-7 items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs font-semibold text-slate-250 backdrop-blur transition-colors hover:border-accent/40 hover:text-accent sm:min-h-8 sm:px-3"
                     style={{ animationDelay: `${120 + index * 70}ms` }}
                   >
                     {chip}
@@ -368,17 +369,17 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <div className="mt-6 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:gap-3">
+              <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:gap-2.5">
                 <Link
                   href="/student-portal"
-                  className="premium-soft-glow inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2.5 text-sm font-black text-[#092128] shadow-lg shadow-accent/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f0cf61] sm:min-h-12 sm:px-5 sm:py-3"
+                  className="premium-soft-glow inline-flex min-h-10 items-center justify-center rounded-xl bg-accent px-4 py-2 text-xs font-black text-[#092128] shadow-md shadow-accent/20 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:bg-[#f0cf61] sm:min-h-11 sm:px-5 sm:text-sm"
                 >
                   Open Student Portal
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
                 <Link
                   href="/notices"
-                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-black text-white shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/80 hover:bg-white/15 sm:min-h-12 sm:px-5 sm:py-3"
+                  className="inline-flex min-h-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-xs font-black text-white shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:border-accent/80 hover:bg-white/15 sm:min-h-11 sm:px-5 sm:text-sm"
                 >
                   View Notices
                   <Bell className="ml-2 h-4 w-4" />
@@ -387,33 +388,33 @@ export default function HomePage() {
             </div>
 
             <div className="premium-slide-in">
-              <div className="premium-accent-sweep rounded-2xl border border-white/15 bg-white/10 p-4 shadow-2xl shadow-black/25 backdrop-blur-md sm:p-6">
-                <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4 sm:gap-5 sm:pb-5">
+              <div className="premium-accent-sweep rounded-2xl border border-white/15 bg-white/5 p-4 shadow-xl shadow-black/25 backdrop-blur-md sm:p-5">
+                <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3 sm:gap-5 sm:pb-4">
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-accent sm:text-xs sm:tracking-[0.2em]">Student Document Portal</p>
-                    <h2 className="mt-1.5 text-xl font-black text-white sm:mt-2 sm:text-2xl">Verify Record</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">Secure access via CNIC / B-Form and Date of Birth.</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.16em] text-accent sm:text-[10px]">Student Document Portal</p>
+                    <h2 className="mt-1 text-lg font-black text-white sm:text-xl">Verify Record</h2>
+                    <p className="mt-1 text-xs leading-5 text-slate-350">Secure access via CNIC / B-Form and Date of Birth.</p>
                   </div>
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent text-[#092128] sm:h-12 sm:w-12 sm:rounded-2xl">
-                    <ShieldCheck className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-[#092128] shadow-sm sm:h-10 sm:w-10 sm:rounded-xl">
+                    <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                 </div>
 
                 <MaskedStudentNamePreview />
 
-                <div className="mt-4 grid gap-2.5 sm:mt-5 sm:gap-3">
+                <div className="mt-3 grid gap-2 sm:mt-4 sm:gap-2.5">
                   {[
                     ["Admit Card Access", "Available", FileText],
                     ["Fee Verification", "Clear", CreditCard],
                   ].map(([title, status, Icon]) => (
-                    <div key={title as string} className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/10 p-3 sm:rounded-2xl">
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/15 text-accent sm:h-10 sm:w-10 sm:rounded-xl">
-                          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <div key={title as string} className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/10 p-2.5 sm:p-3">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-accent sm:h-9 sm:w-9">
+                          <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </span>
-                        <span className="text-sm font-bold text-white">{title as string}</span>
+                        <span className="text-xs font-bold text-white sm:text-sm">{title as string}</span>
                       </div>
-                      <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-black text-primary">{status as string}</span>
+                      <span className="rounded-lg bg-accent px-2 py-1 text-[10px] font-black text-primary shadow-sm">{status as string}</span>
                     </div>
                   ))}
                 </div>
@@ -423,23 +424,27 @@ export default function HomePage() {
         </Container>
       </section>
 
+      {/* Notices Section */}
       <Suspense fallback={<LatestNoticesSectionSkeleton />}>
         <LatestNoticesSection />
       </Suspense>
 
-      <section className="bg-[#F2F5F1] py-8 dark:bg-[#092128] sm:py-16 lg:py-20">
+      {/* Services Section */}
+      <section className="bg-gradient-to-b from-[#F7F7F4] to-[#EEF1EC] py-10 dark:from-[#092128] dark:to-[#06191E] sm:py-16 lg:py-20">
         <Container>
-          <div className="mx-auto mb-6 max-w-3xl text-center sm:mb-10">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-accent sm:text-sm sm:tracking-[0.2em]">Support Cards</p>
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-primary dark:text-white sm:mt-3 sm:text-4xl">
-              Premium support services in one place.
+          <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-12">
+            <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-4 sm:text-xs">
+              Support Services
+            </div>
+            <h2 className="text-3xl font-black tracking-tight text-primary dark:text-white sm:text-4xl lg:text-5xl">
+              Support Services in One Place
             </h2>
-            <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300 sm:mt-4 sm:text-base sm:leading-8">
+            <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-350 sm:mt-4 sm:text-base sm:leading-8">
               Professional guidance for Board Support, Admission Support, document access, and Student Document Portal updates.
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {supportCards.map((card, index) => {
               const Icon = card.icon;
               const isCompactMobile = index >= 3;
@@ -448,41 +453,41 @@ export default function HomePage() {
                 <article
                   key={card.title}
                   className={cn(
-                    "premium-card-line premium-reveal group h-full rounded-2xl border border-slate-200 bg-white shadow-[0_16px_55px_rgb(13_59_70/0.09)] transition-all duration-300 hover:-translate-y-2 hover:border-accent/70 hover:shadow-[0_28px_90px_rgb(13_59_70/0.16)] dark:border-white/10 dark:bg-[#0C2A33] dark:shadow-black/20 sm:flex sm:flex-col sm:p-6",
+                    "premium-card-line premium-reveal group h-full rounded-3xl border border-slate-200 bg-gradient-to-b from-white to-[#F8F9F8] shadow-[0_16px_55px_rgb(13_59_70/0.07)] transition-all duration-300 hover:-translate-y-2 hover:border-accent/70 hover:shadow-[0_28px_90px_rgb(13_59_70/0.14)] dark:border-white/10 dark:from-[#0C2A33] dark:to-[#0A242C] dark:shadow-black/30 sm:flex sm:flex-col sm:p-6",
                     isCompactMobile
-                      ? "grid grid-cols-[auto_minmax(0,1fr)] gap-3 p-3.5"
-                      : "flex flex-col p-4"
+                      ? "grid grid-cols-[auto_minmax(0,1fr)] gap-4 p-4"
+                      : "flex flex-col p-5"
                   )}
                   style={{ animationDelay: `${index * 80}ms` }}
                 >
                   <div
                     className={cn(
-                      "flex items-center justify-center rounded-xl border border-primary/10 bg-primary/10 text-primary shadow-[0_10px_28px_rgb(13_59_70/0.08)] transition-transform duration-300 group-hover:scale-110 dark:border-accent/20 dark:bg-accent/15 dark:text-accent sm:mb-5 sm:h-14 sm:w-14 sm:rounded-2xl",
-                      isCompactMobile ? "h-10 w-10" : "mb-4 h-11 w-11"
+                      "flex items-center justify-center rounded-2xl border border-primary/10 bg-primary/5 text-primary shadow-sm transition-transform duration-300 group-hover:scale-110 dark:border-accent/25 dark:bg-accent/10 dark:text-accent sm:mb-5 sm:h-14 sm:w-14",
+                      isCompactMobile ? "h-11 w-11" : "mb-4 h-12 w-12"
                     )}
                   >
-                    <Icon className={cn("h-5 w-5", !isCompactMobile && "sm:h-7 sm:w-7")} />
+                    <Icon className={cn("h-5 w-5", !isCompactMobile && "sm:h-6 sm:w-6")} />
                   </div>
                   <div className="min-w-0 sm:flex sm:flex-1 sm:flex-col">
-                    <h3 className="text-base font-black text-slate-950 dark:text-white sm:text-xl">{card.title}</h3>
+                    <h3 className="text-lg font-black text-slate-950 dark:text-white sm:text-xl">{card.title}</h3>
                     <p
                       className={cn(
-                        "mt-2 flex-1 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:mt-3 sm:block sm:text-base sm:leading-7",
+                        "mt-2.5 flex-1 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:mt-3 sm:block sm:text-base sm:leading-7",
                         isCompactMobile && "hidden"
                       )}
                     >
                       {card.description}
                     </p>
-                    <div className={cn("mt-3 grid gap-2 sm:mt-6", isCompactMobile && "mt-2 flex flex-wrap gap-1.5 sm:grid sm:gap-2")}>
+                    <div className={cn("mt-4 grid gap-2.5 sm:mt-6", isCompactMobile && "mt-2 flex flex-wrap gap-2 sm:grid sm:gap-2.5")}>
                       {card.highlights.map((item, itemIndex) => (
                         <div
                           key={item}
                           className={cn(
-                            "items-center gap-2 rounded-lg bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 dark:bg-white/10 dark:text-slate-200 sm:flex sm:rounded-xl sm:py-2 sm:text-sm",
+                            "items-center gap-2 rounded-xl bg-[#F1F5F9] px-3.5 py-2 text-xs font-bold text-slate-700 transition-colors hover:bg-accent/10 hover:text-accent dark:bg-white/5 dark:text-slate-200 dark:hover:bg-accent/15 dark:hover:text-accent sm:flex sm:text-sm",
                             isCompactMobile && itemIndex > 0 ? "hidden sm:flex" : "flex"
                           )}
                         >
-                          <CheckCircle2 className="h-4 w-4 shrink-0 text-accent" />
+                          <CheckCircle2 className="h-4 w-4 shrink-0 text-accent transition-transform group-hover:scale-110" />
                           {item}
                         </div>
                       ))}
@@ -495,32 +500,35 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="bg-white py-8 dark:bg-[#071B21] sm:py-16 lg:py-20">
+      {/* Process Section */}
+      <section className="bg-gradient-to-b from-[#EEF1EC] to-white py-10 dark:from-[#06191E] dark:to-[#071B21] sm:py-16 lg:py-20">
         <Container>
-          <div className="mx-auto mb-6 max-w-3xl text-center sm:mb-10">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-accent sm:text-sm sm:tracking-[0.2em]">Portal Process</p>
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-primary dark:text-white sm:mt-3 sm:text-4xl">
-              How the Student Document Portal works.
+          <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-12">
+            <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-4 sm:text-xs">
+              Portal Process
+            </div>
+            <h2 className="text-3xl font-black tracking-tight text-primary dark:text-white sm:text-4xl lg:text-5xl">
+              How the Secure Portal Works
             </h2>
           </div>
 
-          <div className="relative grid gap-4 lg:grid-cols-4 lg:gap-5">
-            <div className="absolute left-0 top-10 hidden h-px w-full bg-accent/35 lg:block" aria-hidden="true" />
+          <div className="relative grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            <div className="absolute left-0 top-12 hidden h-px w-full bg-accent/25 lg:block" aria-hidden="true" />
             {processCards.map((card, index) => {
               const Icon = card.icon;
 
               return (
                 <article
                   key={card.title}
-                  className="premium-reveal relative rounded-2xl border border-slate-200 bg-[#F7F7F4] p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 dark:border-white/10 dark:bg-[#0C2A33] sm:p-5"
+                  className="premium-reveal relative rounded-3xl border border-slate-200 bg-gradient-to-b from-white to-[#F7F7F4] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/60 hover:shadow-md dark:border-white/10 dark:from-[#0C2A33] dark:to-[#092128] sm:p-6"
                   style={{ animationDelay: `${index * 90}ms` }}
                 >
-                  <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-primary shadow-lg shadow-accent/20 sm:mb-5 sm:h-12 sm:w-12">
+                  <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-accent text-primary shadow-lg shadow-accent/20 sm:mb-5 sm:h-12 sm:w-12">
                     <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                   </span>
-                  <div className="mb-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-accent sm:mb-2 sm:text-xs sm:tracking-[0.18em]">Step {index + 1}</div>
+                  <div className="mb-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-accent sm:mb-2 sm:text-xs">Step {index + 1}</div>
                   <h3 className="text-base font-black text-slate-950 dark:text-white sm:text-lg">{card.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:mt-3 sm:text-base sm:leading-7">{card.description}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-350 sm:mt-3 sm:text-base sm:leading-7">{card.description}</p>
                 </article>
               );
             })}
@@ -528,29 +536,31 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="bg-[#0D3B46] py-8 text-white dark:bg-[#071B21] sm:py-16 lg:py-20">
-        <Container>
-          <div className="grid gap-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-10">
+      {/* Portal Advantage Section */}
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#103743_50%,#092128_100%)] py-10 text-white dark:bg-[#071B21] sm:py-16 lg:py-20">
+        <div className="premium-pattern absolute inset-0 opacity-25" aria-hidden="true" />
+        <Container className="relative">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-12">
             <div className="premium-reveal">
-              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-accent/35 bg-accent/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-5 sm:gap-2 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
+              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-accent/35 bg-accent/10 px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-5 sm:gap-2 sm:py-2 sm:text-xs">
                 <BookOpenCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 Student Portal Advantage
               </div>
-              <h2 className="text-2xl font-black tracking-tight sm:text-4xl lg:text-5xl">
-                No more waiting for documents on WhatsApp
+              <h2 className="text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
+                No More Waiting for Documents on WhatsApp
               </h2>
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-200 sm:mt-5 sm:text-base sm:leading-8">
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-200 sm:mt-5 sm:text-base sm:leading-8">
                 Students can verify their record, check document status, and download available enrollment or admit cards directly from the secure portal.
               </p>
-              <div className="mt-5 grid gap-2.5 sm:mt-7 sm:grid-cols-2 sm:gap-3">
+              <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4">
                 {portalBenefits.map((item, index) => (
                   <div
                     key={item}
-                    className="premium-reveal flex items-center gap-3 rounded-xl border border-white/10 bg-white/10 p-3 sm:rounded-2xl sm:p-4"
+                    className="premium-reveal flex items-center gap-3.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 transition-all duration-300 hover:scale-[1.02] hover:border-accent/40 hover:bg-white/10 sm:p-4"
                     style={{ animationDelay: `${index * 80}ms` }}
                   >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-primary sm:h-9 sm:w-9 sm:rounded-xl">
-                      <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-accent text-primary sm:h-9 sm:w-9">
+                      <BadgeCheck className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
                     </span>
                     <span className="text-sm font-bold text-white sm:text-base">{item}</span>
                   </div>
@@ -558,7 +568,7 @@ export default function HomePage() {
               </div>
               <Link
                 href="/student-portal"
-                className="premium-soft-glow mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2.5 text-sm font-black text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f0cf61] sm:mt-8 sm:min-h-12 sm:px-5 sm:py-3"
+                className="premium-soft-glow mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-5 py-2.5 text-sm font-black text-primary transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-[#f0cf61] sm:mt-8 sm:min-h-12 sm:px-6 sm:py-3"
               >
                 Open Student Portal
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -566,7 +576,7 @@ export default function HomePage() {
             </div>
 
             <div className="premium-reveal hidden lg:block">
-              <div className="premium-accent-sweep rounded-2xl border border-white/10 bg-[#071B21]/70 p-6 shadow-2xl shadow-black/25">
+              <div className="premium-accent-sweep rounded-3xl border border-white/10 bg-[#071B21]/60 p-6 shadow-2xl shadow-black/35 backdrop-blur-sm">
                 <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex gap-2">
                     <div className="h-3 w-3 rounded-full bg-red-400" />
@@ -577,7 +587,7 @@ export default function HomePage() {
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/10 p-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent shadow-sm">
                       <CheckCircle2 className="h-6 w-6" />
                     </div>
                     <div>
@@ -587,7 +597,7 @@ export default function HomePage() {
                   </div>
                   <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/10 p-4">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent shadow-sm">
                         <FileText className="h-6 w-6" />
                       </div>
                       <div>
@@ -595,7 +605,7 @@ export default function HomePage() {
                         <div className="text-xs text-slate-400">Ready for download</div>
                       </div>
                     </div>
-                    <span className="rounded-xl bg-accent px-3 py-2 text-xs font-black text-primary">Download</span>
+                    <span className="rounded-xl bg-accent px-3.5 py-2 text-xs font-black text-primary shadow-sm hover:bg-[#f0cf61] transition-colors">Download</span>
                   </div>
                 </div>
               </div>
@@ -604,36 +614,37 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="py-8 pb-20 sm:py-16 sm:pb-16 lg:py-20">
+      {/* Call to Action Section */}
+      <section className="py-10 pb-20 sm:py-16 sm:pb-16 lg:py-20">
         <Container>
-          <div className="premium-pattern overflow-hidden rounded-2xl border border-white/10 bg-[#092128] p-4 text-white shadow-2xl shadow-primary/20 sm:p-8">
+          <div className="premium-pattern overflow-hidden rounded-3xl border border-accent/15 bg-gradient-to-br from-[#092128] via-[#0E3D48] to-[#071A20] p-6 text-white shadow-2xl shadow-primary/20 sm:p-10">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
               <div>
-                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-4 sm:gap-2 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
+                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-4 sm:text-xs">
                   <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   Z.M.G Education Solution
                 </div>
-                <h2 className="text-2xl font-black tracking-tight sm:text-4xl">
-                  Need help with admission or student documents?
+                <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
+                  Need Help with Admission or Documents?
                 </h2>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-200 sm:mt-4 sm:text-base sm:leading-8">
                   Contact Z.M.G Education Solution for Board Support, Enrollment Card Access, Admit Card Access, Fee Verification, and Student Document Portal assistance.
                 </p>
               </div>
 
-              <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3 lg:justify-end">
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-3 lg:justify-end">
                 <a
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="premium-soft-glow inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2.5 text-sm font-black text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f0cf61] sm:min-h-12 sm:px-5 sm:py-3"
+                  className="premium-soft-glow inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-5 py-2.5 text-sm font-black text-primary transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-[#f0cf61] sm:min-h-12 sm:px-6 sm:py-3"
                 >
                   Contact on WhatsApp
                   <MessageSquare className="ml-2 h-4 w-4" />
                 </a>
                 <Link
                   href="/student-portal"
-                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-black text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/15 sm:min-h-12 sm:px-5 sm:py-3"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-black text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-white/15 sm:min-h-12 sm:px-6 sm:py-3"
                 >
                   Open Student Portal
                   <ArrowRight className="ml-2 h-4 w-4" />

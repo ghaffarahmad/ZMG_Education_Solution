@@ -139,8 +139,8 @@ function PreviewField({
   const showTypingCursor = showCursor;
 
   return (
-    <div data-preview-field={previewType} className="rounded-xl border border-white/10 bg-[#071B21]/45 p-3 sm:rounded-2xl sm:p-4">
-      <div className="mb-2 flex min-w-0 items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-accent sm:text-xs">
+    <div data-preview-field={previewType} className="rounded-xl border border-white/10 bg-[#071B21]/45 p-2 sm:p-2.5">
+      <div className="mb-1 flex min-w-0 items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-accent sm:text-[10px]">
         <span className="shrink-0">
           {label}
         </span>
@@ -153,12 +153,12 @@ function PreviewField({
       </div>
       <div
         aria-label={`${label} secure student name preview`}
-        className="flex h-10 min-w-0 items-center rounded-lg border border-white/10 bg-white/10 px-3 text-sm font-black text-white sm:h-11 sm:rounded-xl sm:text-base"
+        className="flex h-8 min-w-0 items-center rounded-lg border border-white/10 bg-white/10 px-2 text-xs font-black text-white sm:h-9 sm:rounded-xl sm:text-sm"
       >
         <span aria-hidden="true" data-preview-name={previewType} className="min-w-0 flex-1 truncate">
           {displayValue}
         </span>
-        {showTypingCursor && <span aria-hidden="true" className="ml-1 h-4 w-px shrink-0 animate-pulse bg-accent" />}
+        {showTypingCursor && <span aria-hidden="true" className="ml-1 h-3.5 w-px shrink-0 animate-pulse bg-accent" />}
       </div>
     </div>
   );
@@ -218,7 +218,7 @@ export function MaskedStudentNamePreview() {
   const femalePreview = useTypingName(femaleNames, prefersReducedMotion, 420);
 
   return (
-    <div className="mt-4 grid gap-2.5 sm:mt-5 sm:gap-3">
+    <div className="mt-2.5 grid gap-2 sm:mt-3 sm:gap-2.5">
       <PreviewField
         label="Male Student"
         previewType="male"
@@ -231,10 +231,10 @@ export function MaskedStudentNamePreview() {
         value={femalePreview}
         showCursor={!prefersReducedMotion}
       />
-      <p className="rounded-xl border border-accent/20 bg-accent/10 px-3 py-2 text-xs font-semibold leading-5 text-slate-200">
+      <p className="rounded-xl border border-accent/20 bg-accent/10 px-2.5 py-1.5 text-[11px] font-semibold leading-4 text-slate-200">
         Your complete record appears only after secure verification.
       </p>
-      <div className="flex min-h-10 items-center justify-center rounded-xl bg-accent text-sm font-black text-primary sm:min-h-12">
+      <div className="flex min-h-9 items-center justify-center rounded-xl bg-accent text-xs font-black text-primary sm:min-h-10 sm:text-sm">
         Secure Verification
       </div>
     </div>

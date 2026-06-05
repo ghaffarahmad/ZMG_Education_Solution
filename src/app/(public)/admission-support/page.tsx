@@ -18,7 +18,7 @@ import { createSeoMetadata, pageSeo } from "@/lib/seo";
 
 export const metadata = createSeoMetadata(pageSeo.admissionSupport);
 
-const whatsappNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923143061669").replace(/[^0-9]/g, "");
+const whatsappNumber = "923143061669";
 const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
 const supportFlowSteps = [
@@ -128,30 +128,30 @@ function WhatsAppButton({ children, className = "" }: { children: React.ReactNod
 export default function AdmissionSupportPage() {
   return (
     <div className="min-h-screen overflow-hidden bg-[#F7F7F4] text-slate-900 dark:bg-[#092128] dark:text-white">
-      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#103743_50%,#071B21_100%)] py-9 text-white sm:py-20 lg:py-24">
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#103743_50%,#071B21_100%)] py-4 text-white sm:py-6 lg:py-8">
         <div className="premium-pattern absolute inset-0 opacity-55" aria-hidden="true" />
-        <div className="absolute left-8 top-10 h-28 w-px rotate-12 bg-accent/40" aria-hidden="true" />
+        <div className="absolute left-8 top-10 h-28 w-px rotate-12 bg-accent/40 animate-pulse" aria-hidden="true" />
         <div className="absolute bottom-10 right-10 h-px w-44 -rotate-12 bg-accent/35" aria-hidden="true" />
         <div className="absolute right-[13%] top-0 h-full w-px bg-white/10" aria-hidden="true" />
 
         <Container className="relative">
           <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.95fr)] lg:gap-10">
             <div className="premium-fade-up">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-5 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-accent sm:mb-4 sm:px-3.5 sm:py-1.5 sm:text-[10px]">
                 <BadgeCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 Professional Admission Support
               </div>
-              <h1 className="text-3xl font-black tracking-tight text-white sm:text-5xl lg:text-7xl">
+              <h1 className="text-2xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Admission Support
               </h1>
-              <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-200 sm:mt-6 sm:text-lg sm:leading-8">
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-200 sm:mt-4 sm:text-base sm:leading-7">
                 Simple, reliable, and professional support for admission-related processes, board documentation, and student record guidance.
               </p>
 
-              <div className="mt-6 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:gap-3">
+              <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:gap-2.5">
                 <Link
                   href="/contact"
-                  className="premium-soft-glow inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-accent px-4 py-2.5 text-sm font-black text-[#092128] shadow-lg shadow-accent/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f0cf61] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary sm:min-h-12 sm:w-auto sm:rounded-xl sm:px-5 sm:py-3"
+                  className="premium-soft-glow inline-flex min-h-10 items-center justify-center rounded-lg bg-accent px-4 py-2 text-xs font-black text-[#092128] shadow-md shadow-accent/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f0cf61] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary sm:min-h-11 sm:px-5 sm:text-sm"
                 >
                   Start Admission Support
                   <ArrowRight className="ml-2 h-4 w-4" />

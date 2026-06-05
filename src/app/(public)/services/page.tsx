@@ -25,7 +25,7 @@ import { createSeoMetadata, pageSeo } from "@/lib/seo";
 
 export const metadata = createSeoMetadata(pageSeo.services);
 
-const whatsappNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923143061669").replace(/[^0-9]/g, "");
+const whatsappNumber = "923143061669";
 const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
 const trustChips = ["Karachi Board", "Ziauddin Board", "AIOU", "Student Portal", "Secure Document Access"];
@@ -222,31 +222,31 @@ function WhatsAppCta({ children, className = "" }: { children: React.ReactNode; 
 export default function ServicesPage() {
   return (
     <div className="min-h-screen overflow-hidden bg-[#F7F7F4] text-slate-900 dark:bg-[#092128] dark:text-white">
-      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#103743_48%,#071B21_100%)] py-9 text-white sm:py-20 lg:py-24">
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#0D3B46_0%,#103743_48%,#071B21_100%)] py-4 text-white sm:py-6 lg:py-8">
         <div className="premium-pattern absolute inset-0 opacity-55" aria-hidden="true" />
-        <div className="absolute left-6 top-12 h-28 w-px rotate-12 bg-accent/40" aria-hidden="true" />
+        <div className="absolute left-6 top-12 h-28 w-px rotate-12 bg-accent/40 animate-pulse" aria-hidden="true" />
         <div className="absolute bottom-10 right-10 h-px w-44 -rotate-12 bg-accent/35" aria-hidden="true" />
         <div className="absolute right-[12%] top-0 h-full w-px bg-white/10" aria-hidden="true" />
 
         <Container className="relative">
           <div className="grid items-center gap-7 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] lg:gap-10">
             <div className="premium-fade-up">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-5 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-accent sm:mb-4 sm:px-3.5 sm:py-1.5 sm:text-[10px]">
                 <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 Premium Education Support
               </div>
-              <h1 className="max-w-4xl text-3xl font-black tracking-tight text-white sm:text-5xl lg:text-7xl">
+              <h1 className="max-w-4xl text-2xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Our Support Services
               </h1>
-              <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-200 sm:mt-6 sm:text-lg sm:leading-8">
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-200 sm:mt-4 sm:text-base sm:leading-7">
                 Professional admission, board, and student document support for Karachi Board, Ziauddin Board, and AIOU university students.
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-2 sm:mt-7 sm:gap-2.5">
+              <div className="mt-4 flex flex-wrap gap-1.5 sm:mt-5 sm:gap-2">
                 {trustChips.map((chip, index) => (
                   <span
                     key={chip}
-                    className="premium-fade-up inline-flex min-h-7 items-center rounded-full border border-white/15 bg-white/10 px-2.5 text-[11px] font-bold text-slate-100 backdrop-blur sm:min-h-9 sm:px-3.5 sm:text-sm"
+                    className="premium-fade-up inline-flex min-h-7 items-center rounded-full border border-white/15 bg-white/10 px-2.5 text-[11px] font-bold text-slate-100 backdrop-blur sm:min-h-8 sm:px-3"
                     style={{ animationDelay: `${120 + index * 70}ms` }}
                   >
                     {chip}
@@ -254,7 +254,7 @@ export default function ServicesPage() {
                 ))}
               </div>
 
-              <div className="mt-6 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:gap-3">
+              <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:gap-2.5">
                 <PrimaryCta href="/student-portal">
                   Open Student Portal
                   <ArrowRight className="ml-2 h-4 w-4" />
