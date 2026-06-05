@@ -20,8 +20,14 @@ import * as z from "zod";
 import { Container } from "@/components/ui/Container";
 
 const inquirySchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  phone: z.string().min(10, "Valid phone number is required"),
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .regex(/^[a-zA-Z\s]+$/, "Name can only contain alphabets and spaces"),
+  phone: z
+    .string()
+    .length(11, "Phone number must be exactly 11 digits")
+    .regex(/^03\d{9}$/, "Phone number must start with 03 (e.g. 03143061669)"),
   programInterest: z.string().optional(),
   board: z.string().optional(),
   message: z.string().min(10, "Please provide more details in your message"),
@@ -96,21 +102,25 @@ export default function ContactPage() {
   const onSubmit = async (data: InquiryFormValues) => {
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (res.ok) {
-        setIsSuccess(true);
-        form.reset();
-        toast.success("Inquiry sent successfully. We will contact you soon.");
-      } else {
-        toast.error("Failed to send inquiry. Please try again.");
-      }
+      const whatsappNumber = "923143061669";
+      
+      const text = `*New Inquiry from Z.M.G Education Portal*\n\n` +
+        `*Name:* ${data.name}\n` +
+        `*Phone:* ${data.phone}\n` +
+        `*Support Area:* ${data.board || "Not specified"}\n` +
+        `*Program/Group:* ${data.programInterest || "Not specified"}\n\n` +
+        `*Message:* ${data.message}`;
+        
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+      
+      // Open WhatsApp link
+      window.open(whatsappUrl, "_blank");
+      
+      setIsSuccess(true);
+      form.reset();
+      toast.success("Redirecting to WhatsApp...");
     } catch (error) {
-      console.error("Failed to submit inquiry", error);
+      console.error("Failed to redirect to WhatsApp", error);
       toast.error("An error occurred. Please try again later.");
     } finally {
       setIsSubmitting(false);
@@ -121,7 +131,7 @@ export default function ContactPage() {
   const email = settings?.emailAddress || "info@zmgeducation.com";
   const address = settings?.officeAddress || "Shop #06 Near Sevri Baba Mazaar, Ahmed Market";
   const timing = settings?.officeTiming || "Monday to Saturday, 10:00 AM - 8:00 PM";
-  const whatsappNumber = (settings?.whatsappNumber || fallbackWhatsappNumber).replace(/[^0-9]/g, "");
+  const whatsappNumber = "923143061669";
   const whatsappUrl = `https://wa.me/${whatsappNumber}`;
   const mapUrl =
     settings?.googleMapEmbedUrl ||
@@ -283,6 +293,9 @@ export default function ContactPage() {
                       <label className="text-sm font-black text-slate-700 dark:text-slate-200">Full Name *</label>
                       <input
                         {...form.register("name")}
+                        onInput={(e) => {
+                          e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Z\s]/g, "");
+                        }}
                         className="min-h-12 w-full rounded-xl border border-slate-200 bg-[#F7F7F4] px-4 text-slate-900 transition-all focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/25 dark:border-white/10 dark:bg-[#092128] dark:text-white dark:focus:bg-white/10"
                         placeholder="e.g. Ali Ahmed"
                       />
@@ -295,8 +308,12 @@ export default function ContactPage() {
                       <label className="text-sm font-black text-slate-700 dark:text-slate-200">Phone Number *</label>
                       <input
                         {...form.register("phone")}
+                        maxLength={11}
+                        onInput={(e) => {
+                          e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
+                        }}
                         className="min-h-12 w-full rounded-xl border border-slate-200 bg-[#F7F7F4] px-4 text-slate-900 transition-all focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/25 dark:border-white/10 dark:bg-[#092128] dark:text-white dark:focus:bg-white/10"
-                        placeholder="e.g. 0300 1234567"
+                        placeholder="e.g. 03143061669"
                       />
                       {form.formState.errors.phone && (
                         <p className="text-xs font-bold text-red-500">{form.formState.errors.phone.message}</p>
