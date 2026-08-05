@@ -617,7 +617,7 @@ export default function HomePage() {
       {/* Call to Action Section */}
       <section className="py-10 pb-20 sm:py-16 sm:pb-16 lg:py-20">
         <Container>
-          <div className="premium-pattern overflow-hidden rounded-3xl border border-accent/15 bg-gradient-to-br from-[#092128] via-[#0E3D48] to-[#071A20] p-6 text-white shadow-2xl shadow-primary/20 sm:p-10">
+          <div className="premium-pattern overflow-hidden rounded-3xl border border-accent/20 bg-[#092128] bg-[linear-gradient(135deg,#092128_0%,#0E3D48_50%,#071A20_100%)] p-6 text-white shadow-2xl shadow-primary/20 sm:p-10">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
               <div>
                 <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-accent sm:mb-4 sm:text-xs">
